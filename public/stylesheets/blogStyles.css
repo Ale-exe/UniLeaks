@@ -1,0 +1,32 @@
+body {
+  font: 54px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 100%;
+}
+
+#topBanner{
+  height: 150px;
+}
+
+/* Left div under top banner*/
+#leftContent{
+  height: 100%;
+}
+
+/* Center div under top banner - This is where main content is placed*/
+#mainContent{
+  height: 100%;
+  width: 70%;
+}
+
+/* Button labelled post when logged in*/
+#postButton{
+  width: 100px;
+  height: 100%;
+}
+
+/* Right div under top banner*/
+#rightContent{
+  height: 100%;
+}
+
+
