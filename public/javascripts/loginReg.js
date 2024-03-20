@@ -44,9 +44,9 @@ async function login(){
 }
 
 function validateRegisterForm(){
-    const username = document.getElementById('inputUsername').value;
-    const password = document.getElementById('inputPassword').value;
-    const email = document.getElementById('inputEmail').value;
+    const username = document.getElementById('inputUsername').value.trim();
+    const password = document.getElementById('inputPassword').value.trim();
+    const email = document.getElementById('inputEmail').value.trim();
 
     if(username.length <= 0){
         document.getElementById("usernameMsg").innerHTML = "Please enter a username";

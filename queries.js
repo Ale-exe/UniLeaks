@@ -38,7 +38,41 @@ const createAccount = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
-    
+
+    if(username.length <= 0)
+    {
+        res.status(200).send({status:200, message:"No username provided"});
+        return;
+    }
+    if(password.length <= 0) {
+        res.status(200).send({status:200, message:"No password provided"});
+        return;
+    }
+    if(password.length < 12) {
+        res.status(200).send({status:200, message:"Password length must be at least 12 characters long"});
+        return;
+    }
+    if(!(/[a-z]/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a lower case character"});
+        return;
+    }
+    if(!(/[A-Z]/.test(password))){
+        document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
+        return;
+    }
+    if(!(/\d/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a number"})
+        return;
+    }
+    if(!(/[#.?!@$%^&*-]/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a special character: #.?!@$%^&*-"})
+        return;
+    }  
+    if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
+        res.status(200).send({status:200, message:"Email is invalid!"});
+        return;
+    }
+
     // check if username or email exists
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1 OR bloggeremail = $2',
         [username, email], (err, result) => {
