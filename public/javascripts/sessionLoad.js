@@ -7,7 +7,7 @@ function loadSession(){
         const loggedInText = document.createElement('p');
 
         // Decrypts the session cookie and displays it on screen to inform user who is logged on
-        let user = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'key');
+        let user = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'ravenous situational echolocation');
         loggedInText.innerText = `Logged in as ${user.toString(CryptoJS.enc.Utf8)}...`;
 
         loggedInText.style.fontWeight = 'bold';

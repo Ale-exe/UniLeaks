@@ -19,16 +19,9 @@ async function login(){
         .then((response) => {
             if (response.status === 201){
                 console.log("success");
-                // give session cookie - cookie expires after 60 minutes
-                // document.cookie = `bloggerLoggedIn = ${data.username}; expires = ${setCookieExpiry(60)}`;
-                document.cookie = `bloggerLoggedIn = ${CryptoJS.AES.encrypt(data.username, 'key')}; expires = ${setCookieExpiry(60)}`;
-
-                // const cipherText = CryptoJS.AES.encrypt(`${getCookieByKey('bloggerLoggedIn')}`,"secret key 123").toString();
-                // console.log(cipherText);
-
-                // let bytes  = CryptoJS.AES.decrypt(cipherText, 'secret key 123');
-                // let originalText = bytes.toString(CryptoJS.enc.Utf8);
-                // console.log(originalText);
+                // give session cookie encrypted using AES - strongest hashing algorithm
+                // - cookie set to expire after 60 minutes
+                document.cookie = `bloggerLoggedIn = ${CryptoJS.AES.encrypt(data.username, 'ravenous situational echolocation')}; expires = ${setCookieExpiry(60)}`;
 
                 // relocate to main page
                 window.location.href = '/'
