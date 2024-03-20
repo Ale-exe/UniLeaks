@@ -27,14 +27,17 @@
             <div class="mb-3">
                 <label for="inputUsername" class="form-label">Username</label>
                 <input type="text" class="form-control" id="inputUsername" name="username">
+                <span id="usernameMsg" style="color:red"> </span>
             </div>
             <div class="mb-3">
                 <label for="inputPassword" class="form-label">Password</label>
                 <input type="password" class="form-control" id="inputPassword" name="password">
+                <span id="passwordMsg" style="color:red"> </span>
             </div>
             <div class="mb-3">
                 <label for="inputEmail" class="form-label">Email</label>
                 <input type="email" class="form-control" id="inputEmail" name="email">
+                <span id="emailMsg" style="color:red"> </span>
             </div>
             <button id="regButton" type="button" class="btn btn-success form-btn"
                     onclick="register()">

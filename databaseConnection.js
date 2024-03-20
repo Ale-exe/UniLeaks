@@ -5,8 +5,8 @@ const pool = new Pool({
     host: "localhost",
     user: "postgres",
     port: 5432,
-    password: "root_user",
-    database: "postgres"
+    password: "Steelseries123",
+    database: "UniLeaks"
 });
 
 // pool object exported for use with queries

@@ -34,8 +34,51 @@ async function login(){
         })
 }
 
+function validateRegisterForm(){
+    const username = document.getElementById('inputUsername').value;
+    const password = document.getElementById('inputPassword').value;
+    const email = document.getElementById('inputEmail').value;
+
+    if(username.length <= 0){
+        document.getElementById("usernameMsg").innerHTML = "Please enter a username";
+        return false;
+    }    
+    if(password.length <= 0) {
+        document.getElementById("passwordMsg").innerHTML = "Please enter a password"
+        return false;
+    }
+    if(password.length < 12) {
+        document.getElementById("passwordMsg").innerHTML = "Password length must be at least 12 characters long";
+        return false; 
+    }
+    if(!(/[a-z]/.test(password))){
+        document.getElementById("passwordMsg").innerHTML = "Password must contain a lower case character";
+        return false;
+    }
+    if(!(/[A-Z]/.test(password))){
+        document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
+        return false;
+    }
+    if(!(/\d/.test(password))){
+        document.getElementById("passwordMsg").innerHTML = "Password must contain a number";
+        return false;
+    }
+    if(!(/[#.?!@$%^&*-]/.test(password))){
+        document.getElementById("passwordMsg").innerHTML = "Password must contain a special character: #.?!@$%^&*-";
+        return false;
+    }  
+    if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
+        document.getElementById("emailMsg").innerHTML = "Please enter a valid email address";
+        return false;
+    }
+    return true;
+}
+
 async function register(){
+    if(!validateRegisterForm())
+        return; 
     const form = document.getElementById('regForm');
+
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
     console.log(data);

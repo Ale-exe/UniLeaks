@@ -38,7 +38,7 @@ const createAccount = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
-
+    
     // check if username or email exists
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1 OR bloggeremail = $2',
         [username, email], (err, result) => {
