@@ -2,7 +2,7 @@ const express = require('express');
 const queries = require('../queries');
 let endpoint_router = express.Router();
 
-// Post queries
+// blogpost queries
 endpoint_router.get('/posts/getallposts', queries.getAllPosts);
 
 endpoint_router.post('/posts/postcontent', queries.postContent);

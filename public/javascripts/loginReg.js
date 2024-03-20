@@ -19,8 +19,8 @@ async function login(){
         .then((response) => {
             if (response.status === 201){
                 console.log("success");
-                // give session cookie - \\TODO: SET EXPIRY ON THIS ONE
-                document.cookie = `bloggerLoggedIn = ${data.username}; expires = `;
+                // give session cookie - cookie expires after 60 minutes
+                document.cookie = `bloggerLoggedIn = ${data.username}; expires = ${setCookieExpiry(60)}`;
                 // relocate to main page
                 window.location.href = '/'
             }  else{

@@ -60,6 +60,8 @@ async function createPost(){
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
+    console.log(data)
+
     // Append the username to the formdata from the post
     const appendedData = Object.assign({},data,{
         username: getCookieByKey('bloggerLoggedIn')

@@ -12,3 +12,10 @@ function getCookieByKey(key){
     }
     return cookieMapper.get(key);
 }
+
+// Allows the time in minutes to be passed to this function - cookie will be removed after this amount of time
+function setCookieExpiry(minutes){
+    let time = new Date();
+    time.setTime(time.getTime() + (minutes * 60 * 1000));
+    return time.toUTCString();
+}

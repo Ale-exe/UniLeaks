@@ -45,7 +45,7 @@ const createAccount = (req, res) => {
             console.log(result.rows);
             // if exists - send back generic error so its not known if username or email already exists
             if (result.rows.length > 0) {
-                res.status(200).send({status: 200, message: "Account exists in system. Please use different combination of username, password and email"});
+                res.status(200).send({status: 200, message: "Please use different combination of username, password and email"});
             } else {
                 // if doesn't exist, then create account
                 pool.query('INSERT INTO dss.bloguser(bloggerusername, bloggerpassword, bloggeremail) VALUES ($1,$2,$3)',
