@@ -6,7 +6,7 @@ const pool = new Pool({
     user: "postgres",
     port: 5432,
     password: "root_user",
-    database: "UniLeaks"
+    database: "postgres"
 });
 
 // pool object exported for use with queries

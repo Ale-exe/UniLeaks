@@ -2,7 +2,6 @@ const pool = require('./databaseConnection');
 
 // Gets all fields from posts table - used in load posts to load existing posts on screen
 const getAllPosts = (req, res) => {
-    console.log("in query");
     pool.query('SELECT * FROM dss.blogposts ORDER BY date ASC, time ASC', (err, result) => {
         console.log(result.rows);
 

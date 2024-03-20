@@ -38,7 +38,7 @@ async function loadPosts(){
                 postOptions.appendChild(author);
 
                 // IF user logged on matches post author then render delete button
-                let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'key');
+                let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'ravenous situational echolocation');
 
                 if (username.toString(CryptoJS.enc.Utf8) === postArray[i][1].blogusername){
                     const deletePostButton = document.createElement('p');
@@ -68,7 +68,7 @@ async function createPost(){
     }
 
     // Decrypt session cookie before passing it to backend
-    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'key');
+    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'ravenous situational echolocation');
 
     // Append the username to the formdata from the post
     const appendedData = Object.assign({},data,{
@@ -98,7 +98,7 @@ async function createPost(){
 
 // Deletes post using the passed post id
 async function deletePost(id){
-    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'key');
+    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),'ravenous situational echolocation');
     const delObj = {postid: id, username: username.toString(CryptoJS.enc.Utf8)};
 
     await fetch('/posts/deletepost', {
