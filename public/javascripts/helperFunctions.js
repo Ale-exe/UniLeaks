@@ -19,3 +19,10 @@ function setCookieExpiry(minutes){
     time.setTime(time.getTime() + (minutes * 60 * 1000));
     return time.toUTCString();
 }
+
+function postErrorMessage(text){
+    const err = document.getElementById('formErr');
+    err.style.visibility = 'visible';
+    err.textContent = text;
+    setTimeout(() => {err.style.visibility = 'hidden'},2500);
+}

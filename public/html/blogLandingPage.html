@@ -7,6 +7,9 @@
     <script src="/static/sessionLoad.js" type="text/javascript" defer></script>
     <script src="/static/post.js" type="text/javascript" defer></script>
     <script src="/static/helperFunctions.js" type="text/javascript" defer></script>
+    <script src="/static/inputValidation.js" type="text/javascript" defer></script>
+    <script src="bower_components/crypto-js/crypto-js.js" type="text/javascript"></script>
+
 
     <meta charset="UTF-8">
     <title>Blog Home</title>
@@ -27,16 +30,16 @@
 
                 <!-- Create post title and "logged in as" test-->
                 <div id="loginDiv" class="d-flex flex-row bd-highlight" style="width: 100%">
-                    <h1>Create Post</h1>
+                    <h1 id="title">Create Post</h1>
                 </div>
-
+                <div id="formErr" class="alert alert-danger" style="visibility: hidden"></div>
                 <div class="mb-3 my-2 form-floating">
-                    <input type="text" class="form-control" placeholder="Enter your post title here" name="blogtitle" id="inputBlogTitle">
-                    <label for="inputBlogTitle" class="form-label">Post Title</label>
+                    <input type="text" class="form-control" required placeholder="Max character count: 50" name="blogtitle" id="inputBlogTitle">
+                    <label for="inputBlogTitle" class="form-label">Post Title: <a style="font-size: 10px">(max character count: 50)</a></label>
                 </div>
                 <div class="mb-3 form-floating">
-                    <textarea class="form-control" placeholder="Enter your post content here" name="blogbody" id="inputBlogBody" style="height: 125px"></textarea>
-                    <label for="inputBlogBody" class="form-label">Post Content</label>
+                    <textarea class="form-control" required placeholder="Enter your post content here" name="blogbody" id="inputBlogBody" style="height: 125px"></textarea>
+                    <label for="inputBlogBody" class="form-label">Post Content: <a style="font-size: 10px">(max character count: 500)</a></label>
                 </div>
                 <button id="postButton" type="button" class="btn btn-success form-btn"
                         onclick="createPost()">
@@ -49,7 +52,9 @@
             </form>
 
         </div>
-        <div class="p-2 bd-highlight flex-fill bg-danger min-vh-100" id="rightContent">Right content</div>
+        <div class="p-2 bd-highlight flex-fill bg-danger min-vh-100" id="rightContent">
+
+        </div>
     </div>
 
 

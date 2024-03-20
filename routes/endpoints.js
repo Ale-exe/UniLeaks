@@ -16,6 +16,4 @@ endpoint_router.post('/users/checkcredentials', queries.checkUserCredentials);
 
 endpoint_router.post('/users/createaccount', queries.createAccount);
 
-
-
 module.exports = endpoint_router;
