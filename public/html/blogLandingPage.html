@@ -38,7 +38,15 @@
                     <textarea class="form-control" placeholder="Enter your post content here" name="blogbody" id="inputBlogBody" style="height: 125px"></textarea>
                     <label for="inputBlogBody" class="form-label">Post Content</label>
                 </div>
-                <button id="postButton" type="button" class="btn btn-success form-btn"
+
+                <p>Click on the "Choose File" button to upload a file:</p>
+                <!-- <form action="/action_page.php"> -->
+                  <input type="file" id="myFile" name="filename">
+                  <input type="submit">
+                <!-- </form> -->
+                </br>
+
+                <button id="postButton" type="button" class="btn btn-success form-btn my-3"
                         onclick="createPost()">
                     Post
                 </button>
