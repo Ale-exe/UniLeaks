@@ -5,6 +5,7 @@ const html = require("./routes/htmlRouter.js");
 const endpoints = require('./routes/endpoints.js');
 
 app.use(express.json());
+
 // JS/CSS/Image handled statically
 app.use('/static', express.static('public/javascripts'));
 app.use('/static', express.static('public/stylesheets'));

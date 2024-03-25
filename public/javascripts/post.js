@@ -1,6 +1,9 @@
 // loads posts on home page
 async function loadPosts(){
 
+    // fetches key from JSON
+    const key = await retrieveKey('session');
+
     // fetches from endpoint 'getallposts' (gets all posts from database)
     await fetch('/posts/getallposts')
         .then(response => response.json())
@@ -38,7 +41,10 @@ async function loadPosts(){
                 postOptions.appendChild(author);
 
                 // IF user logged on matches post author then render delete button
-                if (getCookieByKey('bloggerLoggedIn') === postArray[i][1].blogusername){
+
+                let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
+
+                if (username.toString(CryptoJS.enc.Utf8) === postArray[i][1].blogusername){
                     const deletePostButton = document.createElement('p');
                     deletePostButton.innerText = 'Delete Post';
                     deletePostButton.style.color = 'blue';
@@ -60,10 +66,22 @@ async function createPost(){
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
+    // If post fails the character count check then return failure
+    if (!validateWordcount(data.blogtitle, data.blogbody)){
+        return postErrorMessage("Please ensure posts meet character count constraints");
+    }
+
+    const key = await retrieveKey('session');
+
+    // Decrypt session cookie before passing it to backend
+    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
+
     // Append the username to the formdata from the post
     const appendedData = Object.assign({},data,{
-        username: getCookieByKey('bloggerLoggedIn')
+        username: username.toString(CryptoJS.enc.Utf8)
     })
+
+    console.log(appendedData)
 
     await fetch('/posts/postcontent', {
         method: 'POST',
@@ -86,7 +104,10 @@ async function createPost(){
 
 // Deletes post using the passed post id
 async function deletePost(id){
-    const delObj = {postid: id, username: getCookieByKey('bloggerLoggedIn')};
+    const key = await retrieveKey('session');
+
+    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
+    const delObj = {postid: id, username: username.toString(CryptoJS.enc.Utf8)};
 
     await fetch('/posts/deletepost', {
         method: 'POST',

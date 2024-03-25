@@ -1,11 +1,19 @@
 // Determines if a user has an active session and provides different page content based on this
-function loadSession(){
+async function loadSession(){
     // if a session cookie called 'bloggerLoggedIn' exists
     if(getCookieByKey('bloggerLoggedIn') !== undefined){
 
         // create paragraph to welcome user
         const loggedInText = document.createElement('p');
-        loggedInText.innerText = `Logged in as ${getCookieByKey('bloggerLoggedIn')}...`;
+
+        // Decrypts the session cookie and displays it on screen to inform user who is logged on
+
+        const key = await retrieveKey('session');
+        console.log(key)
+
+        let user = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'), key);
+        loggedInText.innerText = `Logged in as ${user.toString(CryptoJS.enc.Utf8)}...`;
+
         loggedInText.style.fontWeight = 'bold';
         loggedInText.setAttribute('class','ms-auto')
         document.getElementById('loginDiv').appendChild(loggedInText);

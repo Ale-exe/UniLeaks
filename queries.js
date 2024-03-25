@@ -2,7 +2,6 @@ const pool = require('./databaseConnection');
 
 // Gets all fields from posts table - used in load posts to load existing posts on screen
 const getAllPosts = (req, res) => {
-    console.log("in query");
     pool.query('SELECT * FROM dss.blogposts ORDER BY date ASC, time ASC', (err, result) => {
         console.log(result.rows);
 
@@ -39,13 +38,47 @@ const createAccount = (req, res) => {
     const password = req.body.password;
     const email = req.body.email;
 
+    if(username.length <= 0)
+    {
+        res.status(200).send({status:200, message:"No username provided"});
+        return;
+    }
+    if(password.length <= 0) {
+        res.status(200).send({status:200, message:"No password provided"});
+        return;
+    }
+    if(password.length < 12) {
+        res.status(200).send({status:200, message:"Password length must be at least 12 characters long"});
+        return;
+    }
+    if(!(/[a-z]/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a lower case character"});
+        return;
+    }
+    if(!(/[A-Z]/.test(password))){
+        document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
+        return;
+    }
+    if(!(/\d/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a number"})
+        return;
+    }
+    if(!(/[#.?!@$%^&*-]/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a special character: #.?!@$%^&*-"})
+        return;
+    }  
+    if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
+        res.status(200).send({status:200, message:"Email is invalid!"});
+        return;
+    }
+
     // check if username or email exists
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1 OR bloggeremail = $2',
         [username, email], (err, result) => {
             console.log(result.rows);
             // if exists - send back generic error so its not known if username or email already exists
             if (result.rows.length > 0) {
-                res.status(200).send({status: 200, message: "Account exists in system. Please use different combination of username, password and email"});
+                res.status(200).send({status: 200, message: "Please use different combination of username, password and email"});
             } else {
                 // if doesn't exist, then create account
                 pool.query('INSERT INTO dss.bloguser(bloggerusername, bloggerpassword, bloggeremail) VALUES ($1,$2,$3)',
