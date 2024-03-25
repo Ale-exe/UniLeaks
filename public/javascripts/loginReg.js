@@ -19,10 +19,11 @@ async function login(){
         .then((response) => {
             if (response.status === 201){
                 console.log("success");
+                const rand = randomKey(32);
                 // give session cookie encrypted using AES - strongest hashing algorithm
                 // - cookie set to expire after 60 minutes
-                document.cookie = `bloggerLoggedIn = ${CryptoJS.AES.encrypt(data.username, 'ravenous situational echolocation')}; expires = ${setCookieExpiry(60)}`;
-
+                document.cookie = `bloggerLoggedIn = ${CryptoJS.AES.encrypt(data.username, rand)}; expires = ${setCookieExpiry(60)}`;
+                keyToJSON('session',rand);
                 // relocate to main page
                 window.location.href = '/'
             }  else{
