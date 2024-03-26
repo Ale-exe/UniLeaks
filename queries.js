@@ -14,6 +14,22 @@ const getAllPosts = (req, res) => {
     });
 }
 
+
+const readEncryptedPassword = (req, res) => {
+    const username = req.body.username; 
+
+    pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1', [username], (err, result) => {
+        console.log(result.rows);
+        if(result.rows.length > 0){
+            res.status(201).send({status:201, message:"Attempting to login", username:username});
+        }
+        else{
+            res.status(201).send({status:201, message:"Login failed"});
+        }
+    })
+}
+
+
 // Checks if username/ password match those stored in the user table
 const checkUserCredentials = (req, res) => {
     const username = req.body.username;
@@ -37,6 +53,9 @@ const createAccount = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
+    const encryptedPassword = req.body.encryptedPassword;
+
+    console.log("Encrypted password: " + encryptedPassword);
 
     if(username.length <= 0)
     {
@@ -82,7 +101,7 @@ const createAccount = (req, res) => {
             } else {
                 // if doesn't exist, then create account
                 pool.query('INSERT INTO dss.bloguser(bloggerusername, bloggerpassword, bloggeremail) VALUES ($1,$2,$3)',
-                    [username,password,email], (err,result) =>{
+                    [username,encryptedPassword,email], (err,result) =>{
                         console.log(result.rows);
                         if(err) throw err;
                         res.status(201).send({status: 201, message: "Account created"});
@@ -146,6 +165,7 @@ module.exports = {
     getAllPosts,
     checkUserCredentials,
     createAccount,
+    readEncryptedPassword,
     postContent,
     deletePost
 }

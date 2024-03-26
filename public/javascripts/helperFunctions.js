@@ -39,6 +39,28 @@ function randomKey(length){
     console.log(series);
     return series;
 }
+async function keyToJSONPasswords(username, key){
+    let keyStorage = {user:username, key:key};
+    let json = JSON.stringify(keyStorage);
+
+    await fetch('/editJSONPasswords', {
+        method: 'POST',
+        body: json,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(res => res.json())
+        .then((response) => {
+            if (response.status === 201){
+                console.log(response.message);
+            } else {
+                console.log(response.message);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+}
 
 async function keyToJSON(type, hash){
     let hashStorage = {type:type, hash:hash};
