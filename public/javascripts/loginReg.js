@@ -7,6 +7,13 @@ async function login(){
     const data = Object.fromEntries(formData);
     console.log(data);
 
+    await fetch('/users/readencryptedpassword', {
+        method:'POST',
+        body:JSON.stringify({username: data.username}),
+        headers:{
+            'Content-Type':'application/json'
+        }
+    })
 
     await fetch('/users/checkcredentials', {
         method: 'POST',
@@ -44,11 +51,23 @@ async function register(){
 
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+    console.log("Data:");
     console.log(data);
+    const rand = randomKey(32);
+
+    const passwordField = document.getElementById('inputPassword').value;
+    let encryptedPassword = passwordField;
+    const encryption = CryptoJS.AES.encrypt(encryptedPassword, rand).toString();
+
+    const appendedData = Object.assign({},data,{
+        encryptedPassword: encryption
+    })
+
+    console.log(appendedData);
 
     await fetch('/users/createaccount', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(appendedData),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -57,7 +76,10 @@ async function register(){
         .then((response) => {
             if (response.status === 201){
                 console.log("success");
-                window.location.href = '/login'
+
+                keyToJSONPasswords(appendedData.username, rand);
+
+                //window.location.href = '/login'
             }  else{
                 const errorAlert = document.getElementById('regAlert');
                 errorAlert.style.visibility = 'visible';

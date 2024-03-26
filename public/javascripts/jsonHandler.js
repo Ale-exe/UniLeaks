@@ -2,6 +2,64 @@ const fs = require("fs");
 const file = require('express').Router();
 const bodyParser = require('body-parser');
 
+const readPasswordKeyFromJSON = file.post('/readJSONPasswordKeys', bodyParser.json(), (req, res) => {
+    const key = req.body.key;
+    const user = req.body.user;
+
+    const path = './passwordKeys.json';
+
+    if(fs.existsSync(path)) {
+        fs.readFile(path, (err, data) => {
+            let parsedData = JSON.parse(data);
+            let arr = parsedData.data;
+            const elem = arr.map(x => x.user);
+
+            let index = elem.indexOf(user);
+
+            res.status(201).send({status: 201, key: (arr[index].key)});
+        })
+    }
+})
+
+const writeEditJSONFilePasswords = file.post('/editJSONPasswords', bodyParser.json(), (req, res) => {
+    const user = req.body.user;
+    const key = req.body.key;
+    const path = './passwordKeys.json';
+
+    if(fs.existsSync(path)){
+        console.log(`${path} Exists`);
+        fs.readFile(path, (err, data) => {
+            let parsedData = JSON.parse(data);
+            let arr = parsedData.data;
+
+            arr.push({user: user, key:req.body.key});
+
+            fs.writeFileSync(path, JSON.stringify(parsedData), (err) => {
+                if(err){
+                    res.status(200).send({status:200, message:"Could not add new record in JSON"});
+                }
+            })
+        })    
+    }
+    else{
+        let jsonFile = {
+            name:'PasswordKeys',
+            data:[{user:user, key:req.body.key}]
+        }
+
+        console.log("File does not exist!");
+
+        fs.writeFileSync(path, JSON.stringify(jsonFile), (err) => {
+            if (err) {
+                res.status(200).send({status:200, message: "could not create JSON file"});
+            }
+        })
+    }
+
+
+    console.log(`User: ${user}, Key: ${key}`);
+})
+
 const writeEditJSONFile = file.post('/editJSON', bodyParser.json(), (req, res) => {
     const type = req.body.type;
     const id = req.body.hash;
@@ -97,5 +155,6 @@ const getKeyFromJSON = file.post('/getkeyfromJSON', bodyParser.json(), (req, res
 
 module.exports = {
     writeEditJSONFile,
-    getKeyFromJSON
+    getKeyFromJSON,
+    writeEditJSONFilePasswords
 }
