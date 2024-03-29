@@ -26,8 +26,8 @@
         <div class="p-4 bd-highlight bg-light min-vh-100" id="mainContent">
 
 
-            <form id="postCreationForm" class="mb-5">
-
+            <form id="postCreationForm" class="mb-5" enctype="multipart/form-data">
+                
                 <!-- Create post title and "logged in as" test-->
                 <div id="loginDiv" class="d-flex flex-row bd-highlight" style="width: 100%">
                     <h1 id="title">Create Post</h1>
@@ -43,10 +43,7 @@
                 </div>
 
                 <p>Click on the "Choose File" button to upload a file:</p>
-                <!-- <form action="/action_page.php"> -->
-                  <input type="file" id="myFile" name="filename">
-                  <input type="submit">
-                <!-- </form> -->
+                <input type="file" id="myFile" name="file">
                 </br>
 
                 <button id="postButton" type="button" class="btn btn-success form-btn my-3"
@@ -57,7 +54,6 @@
                         onclick="window.location.reload()">
                     Reset
                 </button>
-            </form>
 
         </div>
         <div class="p-2 bd-highlight flex-fill bg-danger min-vh-100" id="rightContent">

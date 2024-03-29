@@ -81,13 +81,21 @@ async function createPost(){
         username: username.toString(CryptoJS.enc.Utf8)
     })
 
-    console.log(appendedData)
+    await fetch('/storefileupload', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Access-Control-Allow-Headers':'*',
+            'Boundary': 'arbitrary-boundary'
+        }
+    })
 
     await fetch('/posts/postcontent', {
         method: 'POST',
         body: JSON.stringify(appendedData),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Headers':'*'
         }
     })
         .then(response => {
@@ -113,7 +121,8 @@ async function deletePost(id){
         method: 'POST',
         body: JSON.stringify(delObj),
         headers:{
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Headers':'*'
         }
     })
         .then(response => {

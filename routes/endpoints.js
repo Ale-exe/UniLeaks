@@ -1,6 +1,7 @@
 const express = require('express');
 const queries = require('../queries');
 const misc = require('../public/javascripts/jsonHandler');
+const upload = require('../public/javascripts/fileUpload');
 let endpoint_router = express.Router();
 
 // blogpost queries
@@ -22,6 +23,8 @@ endpoint_router.post('/users/readencryptedpassword', queries.readEncryptedPasswo
 endpoint_router.post('/editJSON',misc.writeEditJSONFile);
 
 endpoint_router.post('/getkeyfromJSON',misc.getKeyFromJSON);
+
+endpoint_router.post('/storefileupload',upload.storeFileUpload);
 
 endpoint_router.post('/editJSONPasswords', misc.writeEditJSONFilePasswords);
 
