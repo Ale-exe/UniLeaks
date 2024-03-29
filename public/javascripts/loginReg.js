@@ -30,7 +30,7 @@ async function login(){
      
     await fetch('/users/checkcredentials', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(appendedData),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -47,7 +47,7 @@ async function login(){
                 document.cookie = `bloggerLoggedIn = ${CryptoJS.AES.encrypt(data.username, rand)}; expires = ${setCookieExpiry(60)}`;
                 keyToJSON('session',rand);
                 // relocate to main page
-                //window.location.href = '/'
+                window.location.href = '/'
             }  else{
                 // show error message
                 const errorAlert = document.getElementById('loginAlert');
@@ -96,7 +96,7 @@ async function register(){
 
                 keyToJSONPasswords(appendedData.username, rand);
 
-                //window.location.href = '/login'
+                window.location.href = '/login'
             }  else{
                 const errorAlert = document.getElementById('regAlert');
                 errorAlert.style.visibility = 'visible';

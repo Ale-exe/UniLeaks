@@ -36,11 +36,11 @@ const checkUserCredentials = (req, res) => {
     const password = req.body.password;
     const key = req.body.key;
 
-    pool.query('SELECT * FROM dss.bloguser WHERE (bloggerusername = $1 AND bloggerpassword = $2)',
-        [username, password], (err, result) => {
-        console.log(result.rows);
+    console.log(username + " " + password + " " + key + " ")
 
-        
+    pool.query("select * from dss.bloguser WHERE bloggerusername = $1 and $2=convert_from(decrypt(bloggerpassword::bytea, $3, 'aes'), 'SQL_ASCII')",
+        [username, password, key], (err, result) => {
+
 
         // if records are available, return successful status else, return unsuccessful message
         if(result.rows.length > 0){
