@@ -102,3 +102,10 @@ async function retrieveKey(type){
         });
 }
 
+function decrypt(string, key){
+    let decrypt = CryptoJS.AES.decrypt(string, key);
+    let decryptVar = decrypt.toString(CryptoJS.enc.Utf8);
+    return decryptVar;
+
+}
+

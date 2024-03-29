@@ -21,7 +21,7 @@ const readEncryptedPassword = (req, res) => {
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1', [username], (err, result) => {
         console.log(result.rows);
         if(result.rows.length > 0){
-            res.status(201).send({status:201, message:"Attempting to login", username:username});
+            res.status(201).send({status:201, message:"Attempting to login", rows:result.rows});
         }
         else{
             res.status(201).send({status:201, message:"Login failed"});
@@ -34,10 +34,13 @@ const readEncryptedPassword = (req, res) => {
 const checkUserCredentials = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    const key = req.body.key;
 
     pool.query('SELECT * FROM dss.bloguser WHERE (bloggerusername = $1 AND bloggerpassword = $2)',
         [username, password], (err, result) => {
         console.log(result.rows);
+
+        
 
         // if records are available, return successful status else, return unsuccessful message
         if(result.rows.length > 0){
@@ -53,9 +56,7 @@ const createAccount = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
-    const encryptedPassword = req.body.encryptedPassword;
-
-    console.log("Encrypted password: " + encryptedPassword);
+    const key = req.body.key;
 
     if(username.length <= 0)
     {
@@ -91,6 +92,8 @@ const createAccount = (req, res) => {
         return;
     }
 
+    console.log(username + " " + password + " " + key);
+
     // check if username or email exists
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1 OR bloggeremail = $2',
         [username, email], (err, result) => {
@@ -100,11 +103,13 @@ const createAccount = (req, res) => {
                 res.status(200).send({status: 200, message: "Please use different combination of username, password and email"});
             } else {
                 // if doesn't exist, then create account
-                pool.query('INSERT INTO dss.bloguser(bloggerusername, bloggerpassword, bloggeremail) VALUES ($1,$2,$3)',
-                    [username,encryptedPassword,email], (err,result) =>{
-                        console.log(result.rows);
+
+                pool.query("insert into dss.bloguser (bloggerusername, bloggerpassword, bloggeremail) Values ($1,encrypt($2,$3,'aes'),$4)",
+                    [username,password,key,email], (err,result) =>{
                         if(err) throw err;
+                        else {console.log(result.rows);
                         res.status(201).send({status: 201, message: "Account created"});
+                    }
                     })
             }
         })

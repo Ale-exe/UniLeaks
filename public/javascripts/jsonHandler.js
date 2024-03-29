@@ -2,9 +2,8 @@ const fs = require("fs");
 const file = require('express').Router();
 const bodyParser = require('body-parser');
 
-const readPasswordKeyFromJSON = file.post('/readJSONPasswordKeys', bodyParser.json(), (req, res) => {
-    const key = req.body.key;
-    const user = req.body.user;
+const readPasswordKeyFromJSON = file.post('/users/readJSONPasswordKeys', bodyParser.json(), (req, res) => {
+    const user = req.body.username;
 
     const path = './passwordKeys.json';
 
@@ -34,7 +33,7 @@ const writeEditJSONFilePasswords = file.post('/editJSONPasswords', bodyParser.js
 
             arr.push({user: user, key:req.body.key});
 
-            fs.writeFileSync(path, JSON.stringify(parsedData), (err) => {
+            fs.appendFileSync(path, JSON.stringify(parsedData), (err) => {
                 if(err){
                     res.status(200).send({status:200, message:"Could not add new record in JSON"});
                 }
@@ -156,5 +155,6 @@ const getKeyFromJSON = file.post('/getkeyfromJSON', bodyParser.json(), (req, res
 module.exports = {
     writeEditJSONFile,
     getKeyFromJSON,
-    writeEditJSONFilePasswords
+    writeEditJSONFilePasswords,
+    readPasswordKeyFromJSON
 }
