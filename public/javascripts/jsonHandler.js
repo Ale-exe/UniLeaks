@@ -13,9 +13,14 @@ const readPasswordKeyFromJSON = file.post('/users/readJSONPasswordKeys', bodyPar
             let arr = parsedData.data;
             const elem = arr.map(x => x.user);
 
+            // is the user in the JSON file?
             let index = elem.indexOf(user);
-
-            res.status(201).send({status: 201, key: (arr[index].key)});
+            console.log(index)
+            if (index < 0){
+                res.status(200).send({status: 200, message: "Incorrect username or password"});
+            }else {
+                res.status(201).send({status: 201, key: (arr[index].key)});
+            }
         })
     }
 })

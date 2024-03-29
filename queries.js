@@ -38,9 +38,10 @@ const checkUserCredentials = (req, res) => {
 
     console.log(username + " " + password + " " + key + " ")
 
-    pool.query("select * from dss.bloguser WHERE bloggerusername = $1 and $2=convert_from(decrypt(bloggerpassword::bytea, $3, 'aes'), 'SQL_ASCII')",
+    pool.query("select * from dss.bloguser WHERE bloggerusername = $1 and $2= convert_from(decrypt(bloggerpassword::bytea, $3, 'aes'), 'SQL_ASCII')",
         [username, password, key], (err, result) => {
 
+            console.log(result);
 
         // if records are available, return successful status else, return unsuccessful message
         if(result.rows.length > 0){
@@ -58,39 +59,39 @@ const createAccount = (req, res) => {
     const email = req.body.email;
     const key = req.body.key;
 
-    if(username.length <= 0)
-    {
-        res.status(200).send({status:200, message:"No username provided"});
-        return;
-    }
-    if(password.length <= 0) {
-        res.status(200).send({status:200, message:"No password provided"});
-        return;
-    }
-    if(password.length < 12) {
-        res.status(200).send({status:200, message:"Password length must be at least 12 characters long"});
-        return;
-    }
-    if(!(/[a-z]/.test(password))){
-        res.status(200).send({status:200, message:"Password must contain a lower case character"});
-        return;
-    }
-    if(!(/[A-Z]/.test(password))){
-        document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
-        return;
-    }
-    if(!(/\d/.test(password))){
-        res.status(200).send({status:200, message:"Password must contain a number"})
-        return;
-    }
-    if(!(/[#.?!@$%^&*-]/.test(password))){
-        res.status(200).send({status:200, message:"Password must contain a special character: #.?!@$%^&*-"})
-        return;
-    }  
-    if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
-        res.status(200).send({status:200, message:"Email is invalid!"});
-        return;
-    }
+    // if(username.length <= 0)
+    // {
+    //     res.status(200).send({status:200, message:"No username provided"});
+    //     return;
+    // }
+    // if(password.length <= 0) {
+    //     res.status(200).send({status:200, message:"No password provided"});
+    //     return;
+    // }
+    // if(password.length < 12) {
+    //     res.status(200).send({status:200, message:"Password length must be at least 12 characters long"});
+    //     return;
+    // }
+    // if(!(/[a-z]/.test(password))){
+    //     res.status(200).send({status:200, message:"Password must contain a lower case character"});
+    //     return;
+    // }
+    // if(!(/[A-Z]/.test(password))){
+    //     document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
+    //     return;
+    // }
+    // if(!(/\d/.test(password))){
+    //     res.status(200).send({status:200, message:"Password must contain a number"})
+    //     return;
+    // }
+    // if(!(/[#.?!@$%^&*-]/.test(password))){
+    //     res.status(200).send({status:200, message:"Password must contain a special character: #.?!@$%^&*-"})
+    //     return;
+    // }
+    // if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
+    //     res.status(200).send({status:200, message:"Email is invalid!"});
+    //     return;
+    // }
 
     console.log(username + " " + password + " " + key);
 
@@ -110,7 +111,7 @@ const createAccount = (req, res) => {
                         else {console.log(result.rows);
                         res.status(201).send({status: 201, message: "Account created"});
                     }
-                    })
+                })
             }
         })
 }
