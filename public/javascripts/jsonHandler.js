@@ -24,39 +24,45 @@ const writeEditJSONFilePasswords = file.post('/editJSONPasswords', bodyParser.js
     const user = req.body.user;
     const key = req.body.key;
     const path = './passwordKeys.json';
+    fs.readFile(path, (err, data) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                console.log("File does not exist!");
 
-    if(fs.existsSync(path)){
-        console.log(`${path} Exists`);
-        fs.readFile(path, (err, data) => {
+                let jsonFile = {
+                    name:'PasswordKeys',
+                    data:[{user:user, key:req.body.key}]
+                }
+
+                fs.writeFile(path, JSON.stringify(jsonFile), (err) => {
+                    if (err) {
+                        res.status(200).send({status:200, message: "Could not create JSON file"});
+                    } else {
+                        res.status(201).send({status:201, message: "JSON file created successfully"});
+                    }
+                })
+            } else {
+                // Other error, handle accordingly
+                res.status(200).send({status:200, message: "Error reading file"});
+            }
+        } else {
+            // File exists
+            console.log(`${path} exists`);
+
             let parsedData = JSON.parse(data);
             let arr = parsedData.data;
 
             arr.push({user: user, key:req.body.key});
 
-            fs.appendFileSync(path, JSON.stringify(parsedData), (err) => {
+            fs.writeFile(path, JSON.stringify(parsedData), (err) => {
                 if(err){
                     res.status(200).send({status:200, message:"Could not add new record in JSON"});
+                } else {
+                    res.status(201).send({status:201, message:"Record added successfully"});
                 }
             })
-        })    
-    }
-    else{
-        let jsonFile = {
-            name:'PasswordKeys',
-            data:[{user:user, key:req.body.key}]
         }
-
-        console.log("File does not exist!");
-
-        fs.writeFileSync(path, JSON.stringify(jsonFile), (err) => {
-            if (err) {
-                res.status(200).send({status:200, message: "could not create JSON file"});
-            }
-        })
-    }
-
-
-    console.log(`User: ${user}, Key: ${key}`);
+    })
 })
 
 const writeEditJSONFile = file.post('/editJSON', bodyParser.json(), (req, res) => {
