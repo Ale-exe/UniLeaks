@@ -9,6 +9,7 @@ async function loadPosts(){
         .then(response => response.json())
         .then(data => {
 
+            console.log(data);
             // Turn result into array
             const postArray = Object.entries(data);
 
@@ -41,20 +42,21 @@ async function loadPosts(){
                 postOptions.appendChild(author);
 
                 // IF user logged on matches post author then render delete button
+                if(getCookieByKey('bloggerLoggedIn') !== undefined) {
+                    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'), key);
 
-                let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
+                    if (username.toString(CryptoJS.enc.Utf8) === postArray[i][1].blogusername) {
+                        const deletePostButton = document.createElement('p');
+                        deletePostButton.innerText = 'Delete Post';
+                        deletePostButton.style.color = 'blue';
+                        deletePostButton.setAttribute('class', 'ms-auto');
 
-                if (username.toString(CryptoJS.enc.Utf8) === postArray[i][1].blogusername){
-                    const deletePostButton = document.createElement('p');
-                    deletePostButton.innerText = 'Delete Post';
-                    deletePostButton.style.color = 'blue';
-                    deletePostButton.setAttribute('class','ms-auto');
+                        deletePostButton.addEventListener('click', () => {
+                            deletePost(postArray[i][1].postid);
+                        })
 
-                    deletePostButton.addEventListener('click', () => {
-                        deletePost(postArray[i][1].postid);
-                    })
-
-                    postOptions.appendChild(deletePostButton);
+                        postOptions.appendChild(deletePostButton);
+                    }
                 }
             }
 
