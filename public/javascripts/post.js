@@ -83,6 +83,13 @@ async function createPost(){
         username: username.toString(CryptoJS.enc.Utf8)
     })
 
+    // file.originalname
+    let string = myFile.value;
+    string = string.split('\\');
+    console.log(string[string.length-1]);
+    // const filename = Date.now() + '-' + file.originalname;
+
+
     await fetch('/storefileupload', {
         method: 'POST',
         body: formData,
@@ -91,6 +98,10 @@ async function createPost(){
             'Boundary': 'arbitrary-boundary'
         }
     })
+        // .then(res => res.json())
+        .then(data => {
+            console.log(`Data: ${data.body}`);
+        });
 
     await fetch('/posts/postcontent', {
         method: 'POST',
@@ -103,7 +114,7 @@ async function createPost(){
         .then(response => {
             if (response.status === 201){
                 // If successful, reload to show new post
-                window.location.reload();
+                // window.location.reload();  
 
             }  else{
                 // TODO: Create error message
