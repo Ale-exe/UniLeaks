@@ -36,7 +36,6 @@ function randomKey(length){
     for (let i = 0; i < length; i++){
         series += letterArr[Math.floor(Math.random() * (letterArr.length))];
     }
-    console.log(series);
     return series;
 }
 

@@ -1,3 +1,5 @@
+const {hash, verify} = require('./argon2-test');
+
 const pool = require('./databaseConnection');
 
 // Gets all fields from posts table - used in load posts to load existing posts on screen
@@ -34,9 +36,13 @@ const readEncryptedPassword = (req, res) => {
 const checkUserCredentials = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    const key = req.body.key;
 
-    console.log(username + " " + password + " " + key + " ")
+    console.log(username);
+    //const key = req.body.key;
+
+    //console.log(username + " " + password + " " + key + " ")
+
+    /*
 
     pool.query("select * from dss.bloguser WHERE bloggerusername = $1 and $2= convert_from(decrypt(bloggerpassword::bytea, $3, 'aes'), 'SQL_ASCII')",
         [username, password, key], (err, result) => {
@@ -50,14 +56,32 @@ const checkUserCredentials = (req, res) => {
             res.status(200).send({status:200, message: "Incorrect username or password"});
         }
     });
+    */
+
+    pool.query("select bloggerpassword from dss.bloguser WHERE bloggerusername = $1", [username], (err, result) => {
+        console.log(result)
+        if(result.rows.length > 0){
+            try{
+                console.log(verify(result.row.bloggerpassword, password));
+                console.log(result.row);
+                if(verify(result.row.bloggerpassword, password)){
+                    res.status(201).send({status:201, message: "Logged in", username:username});
+                } else{
+                    res.status(200).send({status:200, message:"Incorrect username of password"});
+                }
+            } catch(err){
+                res.status(200).send({status:200, message: "Server error"});
+            }
+        }
+    })
 }
 
 const createAccount = (req, res) => {
 
-    const username = req.body.username;
+    const username = req.body.username
     const password = req.body.password;
     const email = req.body.email;
-    const key = req.body.key;
+    //const key = req.body.key;
 
     // if(username.length <= 0)
     // {
@@ -93,7 +117,7 @@ const createAccount = (req, res) => {
     //     return;
     // }
 
-    console.log(username + " " + password + " " + key);
+    //console.log(username + " " + password + " " + key);
 
     // check if username or email exists
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1 OR bloggeremail = $2',
@@ -105,6 +129,24 @@ const createAccount = (req, res) => {
             } else {
                 // if doesn't exist, then create account
 
+                try{
+                    const hashedPwd = hash(password).then(value => {
+                        console.log(value);
+                    pool.query("insert into dss.bloguser (bloggerusername, bloggerpassword, bloggeremail) Values ($1,$2,$3)",
+                    [username,value,email], (err,result) =>{
+                        if(err) throw err;
+                        else {console.log(result.rows);
+                        res.status(201).send({status: 201, message: "Account created"});
+                    }
+                })
+
+                    });
+
+
+                } catch(err){
+                    res.status(200).send({status:200, message:err.toString()});
+                }
+            /*
                 pool.query("insert into dss.bloguser (bloggerusername, bloggerpassword, bloggeremail) Values ($1,encrypt($2,$3,'aes'),$4)",
                     [username,password,key,email], (err,result) =>{
                         if(err) throw err;
@@ -112,6 +154,7 @@ const createAccount = (req, res) => {
                         res.status(201).send({status: 201, message: "Account created"});
                     }
                 })
+            */
             }
         })
 }

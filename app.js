@@ -3,7 +3,6 @@ const app = express();
 const port = 5000;
 const html = require("./routes/htmlRouter.js");
 const endpoints = require('./routes/endpoints.js');
-
 app.use(express.json());
 
 // JS/CSS/Image handled statically

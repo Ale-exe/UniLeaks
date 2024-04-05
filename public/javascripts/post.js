@@ -9,14 +9,12 @@ async function loadPosts(){
         .then(response => response.json())
         .then(data => {
 
-            console.log(data);
-            // Turn result into array
+             // Turn result into array
             const postArray = Object.entries(data);
 
             // For each array entry, create a "card" to hold data
             for (let i = 0; i < postArray.length; i++){
-                console.log(postArray[i][1]);
-
+      
                 // Dynamically create cards for each row of data from the post table
                 const postCard = document.createElement('div');
                 postCard.setAttribute('class','card my-4');
