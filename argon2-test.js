@@ -15,15 +15,13 @@ async function hash(password) {
 
 async function verify(hash, password){
     try{
-        if(await argon2.verify(hash,"password")){
-            console.log("matched");
+        if(await argon2.verify(hash,password)){
             return true;
         } else{
-            console.log("no match");
+            console.log("no match")
             return false;
         }
     } catch (err){
-        console.log("ERROR " + err);
         return false;
     }
 } 

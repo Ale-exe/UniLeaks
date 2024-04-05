@@ -38,6 +38,7 @@ const checkUserCredentials = (req, res) => {
     const password = req.body.password;
 
     console.log(username);
+    console.log(password);
     //const key = req.body.key;
 
     //console.log(username + " " + password + " " + key + " ")
@@ -58,20 +59,23 @@ const checkUserCredentials = (req, res) => {
     });
     */
 
+    // If
     pool.query("select bloggerpassword from dss.bloguser WHERE bloggerusername = $1", [username], (err, result) => {
-        console.log(result)
+
         if(result.rows.length > 0){
             try{
-                console.log(verify(result.row.bloggerpassword, password));
-                console.log(result.row);
-                if(verify(result.row.bloggerpassword, password)){
-                    res.status(201).send({status:201, message: "Logged in", username:username});
-                } else{
-                    res.status(200).send({status:200, message:"Incorrect username of password"});
-                }
+                verify(result.rows[0].bloggerpassword, password).then(data => {
+                    if(data){
+                        res.status(201).send({status:201, message: "Logged in", username:username});
+                    } else{
+                        res.status(200).send({status:200, message:"Incorrect username or password"});
+                    }
+                })
             } catch(err){
-                res.status(200).send({status:200, message: "Server error"});
+                res.status(200).send({status:200, message: "Server error, please try again later"});
             }
+        } else {
+            res.status(200).send({status:200, message:"Incorrect username or password"});
         }
     })
 }
@@ -128,7 +132,6 @@ const createAccount = (req, res) => {
                 res.status(200).send({status: 200, message: "Please use different combination of username, password and email"});
             } else {
                 // if doesn't exist, then create account
-
                 try{
                     const hashedPwd = hash(password).then(value => {
                         console.log(value);
