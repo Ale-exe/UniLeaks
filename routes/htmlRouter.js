@@ -15,7 +15,11 @@ html_router
     })
     .get('/bower_components/crypto-js/crypto-js.js', function(req, res) {
         res.sendFile((path.resolve('./bower_components/crypto-js/crypto-js.js')));
-})
+    })
+    .get('/node_modules/argon2', function(req, res){
+        res.sendFile((path.resolve('./node_modules/argon2')));
+        
+    })
 
 
 module.exports = html_router;
