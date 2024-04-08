@@ -13,6 +13,9 @@ html_router
     .get('/registration', function(req, res) {
         res.sendFile((path.resolve('./public/html/blogRegistrationPage.html')));
     })
+    .get('/search', function(req, res) {
+        res.sendFile((path.resolve('./public/html/blogSearchPage.html')));
+    })
     .get('/bower_components/crypto-js/crypto-js.js', function(req, res) {
         res.sendFile((path.resolve('./bower_components/crypto-js/crypto-js.js')));
     })
