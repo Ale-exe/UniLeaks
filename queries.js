@@ -16,50 +16,11 @@ const getAllPosts = (req, res) => {
     });
 }
 
-
-const readEncryptedPassword = (req, res) => {
-    const username = req.body.username; 
-
-    pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1', [username], (err, result) => {
-        console.log(result.rows);
-        if(result.rows.length > 0){
-            res.status(201).send({status:201, message:"Attempting to login", rows:result.rows});
-        }
-        else{
-            res.status(201).send({status:201, message:"Login failed"});
-        }
-    })
-}
-
-
 // Checks if username/ password match those stored in the user table
 const checkUserCredentials = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    console.log(username);
-    console.log(password);
-    //const key = req.body.key;
-
-    //console.log(username + " " + password + " " + key + " ")
-
-    /*
-
-    pool.query("select * from dss.bloguser WHERE bloggerusername = $1 and $2= convert_from(decrypt(bloggerpassword::bytea, $3, 'aes'), 'SQL_ASCII')",
-        [username, password, key], (err, result) => {
-
-            console.log(result);
-
-        // if records are available, return successful status else, return unsuccessful message
-        if(result.rows.length > 0){
-            res.status(201).send({status:201, message: "Logged in", username: username});
-        } else {
-            res.status(200).send({status:200, message: "Incorrect username or password"});
-        }
-    });
-    */
-
-    // If
     pool.query("select bloggerpassword from dss.bloguser WHERE bloggerusername = $1", [username], (err, result) => {
 
         if(result.rows.length > 0){
@@ -85,43 +46,40 @@ const createAccount = (req, res) => {
     const username = req.body.username
     const password = req.body.password;
     const email = req.body.email;
-    //const key = req.body.key;
 
-    // if(username.length <= 0)
-    // {
-    //     res.status(200).send({status:200, message:"No username provided"});
-    //     return;
-    // }
-    // if(password.length <= 0) {
-    //     res.status(200).send({status:200, message:"No password provided"});
-    //     return;
-    // }
-    // if(password.length < 12) {
-    //     res.status(200).send({status:200, message:"Password length must be at least 12 characters long"});
-    //     return;
-    // }
-    // if(!(/[a-z]/.test(password))){
-    //     res.status(200).send({status:200, message:"Password must contain a lower case character"});
-    //     return;
-    // }
-    // if(!(/[A-Z]/.test(password))){
-    //     document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
-    //     return;
-    // }
-    // if(!(/\d/.test(password))){
-    //     res.status(200).send({status:200, message:"Password must contain a number"})
-    //     return;
-    // }
-    // if(!(/[#.?!@$%^&*-]/.test(password))){
-    //     res.status(200).send({status:200, message:"Password must contain a special character: #.?!@$%^&*-"})
-    //     return;
-    // }
-    // if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
-    //     res.status(200).send({status:200, message:"Email is invalid!"});
-    //     return;
-    // }
-
-    //console.log(username + " " + password + " " + key);
+    if(username.length <= 0)
+    {
+        res.status(200).send({status:200, message:"No username provided"});
+        return;
+    }
+    if(password.length <= 0) {
+         res.status(200).send({status:200, message:"No password provided"});
+         return;
+    }
+    if(password.length < 12) {
+         res.status(200).send({status:200, message:"Password length must be at least 12 characters long"});
+         return;
+    }
+    if(!(/[a-z]/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a lower case character"});
+        return;
+    }
+    if(!(/[A-Z]/.test(password))){
+        document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
+        return;
+    }
+    if(!(/\d/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a number"})
+        return;
+    }
+    if(!(/[#.?!@$%^&*-]/.test(password))){
+        res.status(200).send({status:200, message:"Password must contain a special character: #.?!@$%^&*-"})
+        return;
+    }
+    if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
+        res.status(200).send({status:200, message:"Email is invalid!"});
+        return;
+    }
 
     // check if username or email exists
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1 OR bloggeremail = $2',
@@ -143,21 +101,10 @@ const createAccount = (req, res) => {
                     }
                 })
 
-                    });
-
-
+            });
                 } catch(err){
                     res.status(200).send({status:200, message:err.toString()});
                 }
-            /*
-                pool.query("insert into dss.bloguser (bloggerusername, bloggerpassword, bloggeremail) Values ($1,encrypt($2,$3,'aes'),$4)",
-                    [username,password,key,email], (err,result) =>{
-                        if(err) throw err;
-                        else {console.log(result.rows);
-                        res.status(201).send({status: 201, message: "Account created"});
-                    }
-                })
-            */
             }
         })
 }
@@ -168,6 +115,12 @@ const postContent = (req, res) => {
     const username = req.body.username;
     const title = req.body.blogtitle;
     const body = req.body.blogbody;
+
+    if(postTitle.includes('<') || postTitle.includes('>'))
+    {
+        res.status(200).send({status:200, message:"This type of content is not permitted"});
+        return;
+    }
 
     // First checks if user exists in database by comparing their username to database
     pool.query('SELECT bloggerid FROM dss.bloguser WHERE bloggerusername = $1',
@@ -217,7 +170,6 @@ module.exports = {
     getAllPosts,
     checkUserCredentials,
     createAccount,
-    readEncryptedPassword,
     postContent,
     deletePost
 }

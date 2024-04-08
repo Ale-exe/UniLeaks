@@ -70,6 +70,9 @@ async function createPost(){
     if (!validateWordcount(data.blogtitle, data.blogbody)){
         return postErrorMessage("Please ensure posts meet character count constraints");
     }
+    else if(!validatePost(data.blogtitle, data.blodybody)){
+        return postErrorMessage("This type of content is not permitted");
+    }
 
     const key = await retrieveKey('session');
 

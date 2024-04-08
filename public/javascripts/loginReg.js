@@ -7,38 +7,7 @@ async function login(){
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
-    /*
-
-    // Accesses JSON file and retrieves the key associated with the passed in username
-    await fetch('/users/readJSONPasswordKeys', {
-        method:'POST',
-        body:JSON.stringify(data),
-        headers:{
-            'Content-Type':'application/json'
-        }
-    }).then(res => res.json()).then((response) => {
-        if(response.status === 201){
-            // IF user exists in JSON file, assigns the key to the empty variable
-            key = response.key;
-
-            // appends key to other user user inputs in login form
-            const appendedData = Object.assign({},data,{
-                key: key
-            })
-
-            // Compares user entered password with database password decrypted with key
-            // Generates cookie with a 60 minute expiry time
-            generateCookie(appendedData);
-       } else {
-            // Otherwise shows generic error message
-            const errorAlert = document.getElementById('loginAlert');
-            errorAlert.style.visibility = 'visible';
-            errorAlert.innerText = response.message;
-        }
-    })
-    */
-
-       await fetch('/users/checkcredentials', {
+    await fetch('/users/checkcredentials', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -103,7 +72,6 @@ async function generateCookie(data){
         })
 }
 
-// Places username and key as a key:value pair within a JSON file
 async function keyToJSON(type, hash){
     let hashStorage = {type:type, hash:hash};
     let json = JSON.stringify(hashStorage);
@@ -126,14 +94,6 @@ async function keyToJSON(type, hash){
         })
 }
 
-
-
-
-
-
-
-// If user inputs satisfy validations, take inputs, generate a random key, then store in database.
-// Password is encrypted database side with the random key. Key is then placed in a JSON file.
 async function register(){
     if(!validateRegisterForm())
         return;
@@ -141,16 +101,6 @@ async function register(){
     const form = document.getElementById('regForm');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-
-    // Generates random 256bit key to satisfy OWASP security guidelines
- //   const rand = randomKey(32);
-
-    // Append key to gathered user form data
-  /*
-    const appendedData = Object.assign({},data,{
-        key: rand
-    })
-*/
 
     // Store in database. Password is encrypted database side with the random key
     await fetch('/users/createaccount', {
@@ -164,10 +114,6 @@ async function register(){
         .then((response) => {
             if (response.status === 201){
                 console.log("success");
-
-                // Store username and key as a key:value pair within a JSON file
-                //keyToJSONPasswords(appendedData.username, rand);
-
                 window.location.href = '/login'
             }  else{
                 // If data could not be stored successfully in database, display generic error message
@@ -175,30 +121,5 @@ async function register(){
                 errorAlert.style.visibility = 'visible';
                 errorAlert.innerText = response.message;
             }
-        })
-}
-
-// Places username and key as a key:value pair within a JSON file
-async function keyToJSONPasswords(username, key){
-    //let keyStorage = {user:username, key:key};
-    //let json = JSON.stringify(keyStorage);
-
-    await fetch('/editJSONPasswords', {
-        method: 'POST',
-        body: json,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-        .then(res => res.json())
-        .then((response) => {
-            if (response.status === 201){
-                console.log(response.message);
- 
-            } else {
-                console.log(response.message);
-            }
-        }).catch((err) => {
-            console.log(err);
         })
 }
