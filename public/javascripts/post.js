@@ -63,33 +63,14 @@ async function loadPosts(){
 
 async function createPost(){
     const form = document.getElementById('postCreationForm');
-
-    let filename = myFile.value; //myFile is from blogLandingPage.html
-    filename = filename.split('\\')
-    filename = filename[filename.length-1];
-    filename = Date.now() + '-' + filename;
-
     const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
 
-    // If post fails the character count check then return failure
-    if (!validateWordcount(data.blogtitle, data.blogbody)){
-        return postErrorMessage("Please ensure posts meet character count constraints");
-    }
+    // // If post fails the character count check then return failure
+    // if (!validateWordcount(data.blogtitle, data.blogbody)){
+    //     return postErrorMessage("Please ensure posts meet character count constraints");
+    // }
 
-    const key = await retrieveKey('session');
-
-    // Decrypt session cookie before passing it to backend
-    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
-
-    // Append the username to the formdata from the post
-    const appendedData = Object.assign({},data,{
-        username: username.toString(CryptoJS.enc.Utf8),
-        filename: filename
-    });
-
-
-
+    let filepath = "";
     await fetch('/storefileupload', {
         method: 'POST',
         body: formData,
@@ -98,10 +79,25 @@ async function createPost(){
             'Boundary': 'arbitrary-boundary'
         }
     })
-        // .then(res => res.json())
+        .then(res => res.json())
         .then(data => {
-            console.log(`Data: ${data.body}`);
+            filepath = data.path;
         });
+
+    console.log("Long filename:");
+    console.log(filepath);
+
+    const data = Object.fromEntries(formData);
+    const key = await retrieveKey('session');
+    // Decrypt session cookie before passing it to backend
+    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
+    let extraData = {       
+        username: username.toString(CryptoJS.enc.Utf8),
+        path: filepath
+    };
+
+    // Append the username to the formdata from the post
+    const appendedData = Object.assign(data, extraData);
 
     await fetch('/posts/postcontent', {
         method: 'POST',
