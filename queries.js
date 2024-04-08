@@ -122,6 +122,7 @@ const postContent = (req, res) => {
     const username = req.body.username;
     const title = req.body.blogtitle;
     const body = req.body.blogbody;
+    const filename = req.body.filename;
 
     // First checks if user exists in database by comparing their username to database
     pool.query('SELECT bloggerid FROM dss.bloguser WHERE bloggerusername = $1',

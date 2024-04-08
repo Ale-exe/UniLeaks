@@ -65,6 +65,12 @@ async function loadPosts(){
 
 async function createPost(){
     const form = document.getElementById('postCreationForm');
+
+    let filename = myFile.value; //myFile is from blogLandingPage.html
+    filename = filename.split('\\')
+    filename = filename[filename.length-1];
+    filename = Date.now() + '-' + filename;
+
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
 
@@ -80,14 +86,10 @@ async function createPost(){
 
     // Append the username to the formdata from the post
     const appendedData = Object.assign({},data,{
-        username: username.toString(CryptoJS.enc.Utf8)
-    })
+        username: username.toString(CryptoJS.enc.Utf8),
+        filename: filename
+    });
 
-    // file.originalname
-    let string = myFile.value;
-    string = string.split('\\');
-    console.log(string[string.length-1]);
-    // const filename = Date.now() + '-' + file.originalname;
 
 
     await fetch('/storefileupload', {
