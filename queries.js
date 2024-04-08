@@ -1,4 +1,4 @@
-const {hash, verify} = require('./argon2-test');
+const {hash, verify} = require('./hashing');
 
 const pool = require('./databaseConnection');
 
@@ -21,6 +21,7 @@ const checkUserCredentials = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
+    // If the username exists in the database - compare user entered password with the hash in the DB using verify function
     pool.query("select bloggerpassword from dss.bloguser WHERE bloggerusername = $1", [username], (err, result) => {
 
         if(result.rows.length > 0){
@@ -81,7 +82,7 @@ const createAccount = (req, res) => {
         return;
     }
 
-    // check if username or email exists
+    // check if username or email exists already
     pool.query('SELECT * FROM dss.bloguser WHERE bloggerusername = $1 OR bloggeremail = $2',
         [username, email], (err, result) => {
             console.log(result.rows);
@@ -89,7 +90,7 @@ const createAccount = (req, res) => {
             if (result.rows.length > 0) {
                 res.status(200).send({status: 200, message: "Please use different combination of username, password and email"});
             } else {
-                // if doesn't exist, then create account
+                // if doesn't exist, then create account and hash password using Argon2 hashing algorithm and input data in db
                 try{
                     const hashedPwd = hash(password).then(value => {
                         console.log(value);
@@ -98,10 +99,8 @@ const createAccount = (req, res) => {
                         if(err) throw err;
                         else {console.log(result.rows);
                         res.status(201).send({status: 201, message: "Account created"});
-                    }
-                })
-
-            });
+                    }})
+                });
                 } catch(err){
                     res.status(200).send({status:200, message:err.toString()});
                 }
@@ -115,6 +114,7 @@ const postContent = (req, res) => {
     const username = req.body.username;
     const title = req.body.blogtitle;
     const body = req.body.blogbody;
+    const filename = req.body.filename;
 
     if(postTitle.includes('<') || postTitle.includes('>'))
     {

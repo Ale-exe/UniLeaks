@@ -16,12 +16,11 @@ const storage = multer.diskStorage({
   
 // Create the multer instance
 const upload = multer({ storage: storage });
-  
 
 // Set up a route for file uploads
 const storeFileUpload = router.post('/storefileupload', upload.single('file'), (req, res) => {
-    // Handle the uploaded file
-    res.json({ message: 'File uploaded successfully!' });
+    // Return the generated file name for use by other functions
+    res.json({ message: 'File uploaded successfully!', path : req.file.path});
   });
 
 module.exports = {

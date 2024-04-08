@@ -72,7 +72,6 @@ const writeEditJSONFile = file.post('/editJSON', bodyParser.json(), (req, res) =
 
 
 const getKeyFromJSON = file.post('/getkeyfromJSON', bodyParser.json(), (req, res) => {
-    console.log("in key from JSON")
 
     const type = req.body.type;
     const path = './storedHash.json';
