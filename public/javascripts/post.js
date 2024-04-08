@@ -67,6 +67,8 @@ async function createPost(){
 
     let filepath = "";
     
+    const data = Object.fromEntries(formData);
+
     // If post fails the character count check then return failure
     if (!validateWordcount(data.blogtitle, data.blogbody)){
         return postErrorMessage("Please ensure posts meet character count constraints");
@@ -91,7 +93,6 @@ async function createPost(){
     console.log("Long filename:");
     console.log(filepath);
 
-    const data = Object.fromEntries(formData);
     const key = await retrieveKey('session');
     // Decrypt session cookie before passing it to backend
     let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);

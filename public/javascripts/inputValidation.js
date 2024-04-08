@@ -15,6 +15,8 @@ function validateWordcount(postTitle, postBody){
 function validatePost(postTitle, postBody){
     if(postTitle.includes('<') || postTitle.includes('>'))
         return false;
+
+    return true;
 }
 
 //Input validation for the sign up form

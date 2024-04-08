@@ -116,7 +116,7 @@ const postContent = (req, res) => {
     const body = req.body.blogbody;
     const filename = req.body.filename;
 
-    if(postTitle.includes('<') || postTitle.includes('>'))
+    if(title.includes('<') || body.includes('>'))
     {
         res.status(200).send({status:200, message:"This type of content is not permitted"});
         return;
