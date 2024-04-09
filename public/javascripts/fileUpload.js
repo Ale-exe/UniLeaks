@@ -7,7 +7,7 @@ const multer = require('multer');
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'uploads/');
+      cb(null, 'public/images/');
     },
     filename: (req, file, cb) => {
       cb(null, Date.now() + '-' + file.originalname);
@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 // Set up a route for file uploads
 const storeFileUpload = router.post('/storefileupload', upload.single('file'), (req, res) => {
     // Return the generated file name for use by other functions
-    res.json({ message: 'File uploaded successfully!', path : req.file.path});
+    res.json({ message: 'File uploaded successfully!', path : req.file.filename});
   });
 
 module.exports = {
