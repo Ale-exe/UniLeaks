@@ -10,6 +10,15 @@ function validateWordcount(postTitle, postBody){
         return true;
     }
 }
+
+//Removes illegal characters such as HTML tags
+function validatePost(postTitle, postBody){
+    if(postTitle.includes('<') || postTitle.includes('>'))
+        return false;
+
+    return true;
+}
+
 //Input validation for the sign up form
 function validateRegisterForm(){
     const username = document.getElementById('inputUsername').value.trim();

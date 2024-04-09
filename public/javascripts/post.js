@@ -65,12 +65,18 @@ async function createPost(){
     const form = document.getElementById('postCreationForm');
     const formData = new FormData(form);
 
-    // // If post fails the character count check then return failure
-    // if (!validateWordcount(data.blogtitle, data.blogbody)){
-    //     return postErrorMessage("Please ensure posts meet character count constraints");
-    // }
-
     let filepath = "";
+    
+    const data = Object.fromEntries(formData);
+
+    // If post fails the character count check then return failure
+    if (!validateWordcount(data.blogtitle, data.blogbody)){
+        return postErrorMessage("Please ensure posts meet character count constraints");
+    }
+    else if(!validatePost(data.blogtitle, data.blodybody)){
+        return postErrorMessage("This type of content is not permitted");
+    }
+
     await fetch('/storefileupload', {
         method: 'POST',
         body: formData,
@@ -84,10 +90,6 @@ async function createPost(){
             filepath = data.path;
         });
 
-    console.log("Long filename:");
-    console.log(filepath);
-
-    const data = Object.fromEntries(formData);
     const key = await retrieveKey('session');
     // Decrypt session cookie before passing it to backend
     let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
