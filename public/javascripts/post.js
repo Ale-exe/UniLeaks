@@ -20,28 +20,19 @@ async function loadPosts(){
                 postCard.setAttribute('class','card my-4');
                 // post id set to id of post in database
                 postCard.setAttribute('id',`${postArray[i][1].postid}`);
-
-                console.log("postArray:");
-                console.log(postArray[i][1].filepath);
-
                 const postCardImage = document.createElement('img');
                 if (postArray[i][1].filepath) {
                     postCardImage.setAttribute('class', 'card-img-top');
                     postCardImage.setAttribute('src', src='images/'+postArray[i][1].filepath);
                 }
-
                 const postCardBody = document.createElement('div');
                 postCardBody.setAttribute('class','card-body');
-
                 const postCardTitle = document.createElement('h4');
-
                 postCardTitle.textContent = encodeOutput(postArray[i][1].title);
                 const postCardMainText = document.createElement('p');
                 postCardMainText.textContent = encodeOutput(postArray[i][1].body);
-
                 const postOptions = document.createElement('div');
                 postOptions.setAttribute('class','d-flex');
-
                 const author = document.createElement('p');
                 author.textContent = encodeOutput(`Author: ${postArray[i][1].blogusername}`);
 
