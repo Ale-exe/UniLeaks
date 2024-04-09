@@ -126,8 +126,8 @@ const postContent = (req, res) => {
 
             // If there is a user with this username, create post in posts table
             if(result.rows.length > 0){
-                pool.query('INSERT INTO dss.blogposts(bloguserid, blogusername, title, body) VALUES ($1,$2,$3,$4)',
-                    [id, username, title, body], (err, result) => {
+                pool.query('INSERT INTO dss.blogposts(bloguserid, blogusername, title, body, filepath) VALUES ($1,$2,$3,$4,$5)',
+                    [id, username, title, body, filepath], (err, result) => {
                         if(err) throw err;
                         res.status(201).send({status:201, message: "Post created"});
                     })
@@ -159,10 +159,22 @@ const deletePost = (req, res) => {
         });
 }
 
+const searchPosts = (req, res) => {
+    let searchTerm = req.body.searchterm;
+
+    // select all post titles and bodies that include the searchterm
+    pool.query("SELECT * FROM dss.blogposts WHERE (LOWER(title) LIKE LOWER('%" + searchTerm + "%')) OR LOWER(body) LIKE LOWER('%" + searchTerm + "%')", (err, result) => {
+            console.log(result.rows);
+            res.status(201).send({status:201, result:result.rows});
+    });
+}
+
+
 module.exports = {
     getAllPosts,
     checkUserCredentials,
     createAccount,
     postContent,
-    deletePost
+    deletePost,
+    searchPosts
 }

@@ -24,4 +24,8 @@ endpoint_router.post('/getkeyfromJSON',misc.getKeyFromJSON);
 
 endpoint_router.post('/storefileupload',upload.storeFileUpload);
 
+// search
+
+endpoint_router.post('/searchposts', queries.searchPosts);
+
 module.exports = endpoint_router;
