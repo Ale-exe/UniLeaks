@@ -90,9 +90,6 @@ async function createPost(){
             filepath = data.path;
         });
 
-    console.log("Long filename:");
-    console.log(filepath);
-
     const key = await retrieveKey('session');
     // Decrypt session cookie before passing it to backend
     let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
