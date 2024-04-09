@@ -177,11 +177,23 @@ const deletePost = (req, res) => {
         });
 }
 
+const searchPosts = (req, res) => {
+    let searchTerm = req.body.searchterm;
+
+    // select all post titles and bodies that include the searchterm
+    pool.query("SELECT * FROM dss.blogposts WHERE (LOWER(title) LIKE LOWER('%" + searchTerm + "%')) OR LOWER(body) LIKE LOWER('%" + searchTerm + "%')", (err, result) => {
+            console.log(result.rows);
+            res.status(201).send({status:201, result:result.rows});
+    });
+}
+
+
 module.exports = {
     getAllPosts,
     checkUserCredentials,
     createAccount,
     readEncryptedPassword,
     postContent,
-    deletePost
+    deletePost,
+    searchPosts
 }

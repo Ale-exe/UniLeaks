@@ -31,4 +31,8 @@ endpoint_router.post('/editJSONPasswords', misc.writeEditJSONFilePasswords);
 
 endpoint_router.post('/users/readJSONPasswordKeys', misc.readPasswordKeyFromJSON);
 
+// search
+
+endpoint_router.post('/searchposts', queries.searchPosts);
+
 module.exports = endpoint_router;
