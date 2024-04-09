@@ -11,7 +11,7 @@ async function loadSession(){
         const key = await retrieveKey('session');
 
         let user = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'), key);
-        loggedInText.innerText = `Logged in as ${user.toString(CryptoJS.enc.Utf8)}...`;
+        loggedInText.textContent = `Logged in as ${user.toString(CryptoJS.enc.Utf8)}...`;
 
         loggedInText.style.fontWeight = 'bold';
         loggedInText.setAttribute('class','ms-auto')
@@ -19,7 +19,7 @@ async function loadSession(){
 
         // create logout button that deletes cookie on click
         const logout = document.createElement('p');
-        logout.innerText = 'Logout';
+        logout.textContent = 'Logout';
         logout.style.color = 'blue';
         // On click, deletes cookie, logging user out
         logout.addEventListener('click', () => {
@@ -37,7 +37,7 @@ async function loadSession(){
         hyper.textContent = "here";
 
         const loginText = document.createElement('p');
-        loginText.innerText = "Not currently logged in. To post, log in ";
+        loginText.textContent = "Not currently logged in. To post, log in ";
         loginText.appendChild(hyper);
         document.getElementById('mainContent').appendChild(loginText);
 

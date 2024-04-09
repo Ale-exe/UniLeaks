@@ -31,7 +31,7 @@ async function login(){
                 // If unsuccessful show error message
                 const errorAlert = document.getElementById('loginAlert');
                 errorAlert.style.visibility = 'visible';
-                errorAlert.innerText = response.message;
+                errorAlert.textContent = encodeOutput(response.message);
 
                 // add 1 to count of incorrect attempts - lock out for 30 mins?
             }
@@ -65,7 +65,7 @@ async function generateCookie(data){
                 // If unsuccessful show error message
                 const errorAlert = document.getElementById('loginAlert');
                 errorAlert.style.visibility = 'visible';
-                errorAlert.innerText = response.message;
+                errorAlert.textContent = encodeOutput(response.message);
 
                 // add 1 to count of incorrect attempts - lock out for 30 mins?
             }
@@ -119,7 +119,7 @@ async function register(){
                 // If data could not be stored successfully in database, display generic error message
                 const errorAlert = document.getElementById('regAlert');
                 errorAlert.style.visibility = 'visible';
-                errorAlert.innerText = response.message;
+                errorAlert.textContent = encodeOutput(response.message);
             }
         })
 }

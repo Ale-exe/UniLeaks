@@ -26,38 +26,38 @@ function validateRegisterForm(){
     const email = document.getElementById('inputEmail').value.trim();
 
     if(username.length <= 0){
-        document.getElementById("usernameMsg").innerText = "Please enter a username";
+        document.getElementById("usernameMsg").textContent = "Please enter a username";
         return false;
     }    
     if(username.length > 20){
-        document.getElementById("usernameMsg").innerText = "Username has to be a maximum of 20 characters";
+        document.getElementById("usernameMsg").textContent = "Username has to be a maximum of 20 characters";
     }
     if(password.length <= 0) {
-        document.getElementById("passwordMsg").innerText = "Please enter a password"
+        document.getElementById("passwordMsg").textContent = "Please enter a password"
         return false;
     }
     if(password.length < 12) {
-        document.getElementById("passwordMsg").innerText = "Password length must be at least 12 characters long";
+        document.getElementById("passwordMsg").textContent = "Password length must be at least 12 characters long";
         return false; 
     }
     if(!(/[a-z]/.test(password))){
-        document.getElementById("passwordMsg").innerText = "Password must contain a lower case character";
+        document.getElementById("passwordMsg").textContent = "Password must contain a lower case character";
         return false;
     }
     if(!(/[A-Z]/.test(password))){
-        document.getElementById("passwordMsg").innerText = "Password must contain an upper case character";
+        document.getElementById("passwordMsg").textContent = "Password must contain an upper case character";
         return false;
     }
     if(!(/\d/.test(password))){
-        document.getElementById("passwordMsg").innerText = "Password must contain a number";
+        document.getElementById("passwordMsg").textContent = "Password must contain a number";
         return false;
     }
     if(!(/[#.?!@$%^&*-]/.test(password))){
-        document.getElementById("passwordMsg").innerText = "Password must contain a special character: #.?!@$%^&*-";
+        document.getElementById("passwordMsg").textContent = "Password must contain a special character: #.?!@$%^&*-";
         return false;
     }  
     if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
-        document.getElementById("emailMsg").innerText = "Please enter a valid email address";
+        document.getElementById("emailMsg").textContent = "Please enter a valid email address";
         return false;
     }
     return true;

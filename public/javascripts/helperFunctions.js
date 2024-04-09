@@ -64,3 +64,12 @@ function decrypt(string, key){
 
 }
 
+function encodeOutput(text){
+    const specialChars = {'&': '&amp', '<': '&lt', '>': '&gt', '"': '&quot', "'": '&#x27'};
+
+    return text.replace(/[&<>"']/g, function(char){
+        let encodedChar = specialChars[char] || char;
+        return encodedChar;
+    });
+}
+

@@ -23,13 +23,13 @@ async function loadPosts(){
                 const postCardBody = document.createElement('div');
                 postCardBody.setAttribute('class','card-body');
                 const postCardTitle = document.createElement('h4');
-                postCardTitle.innerText = postArray[i][1].title;
+                postCardTitle.textContent = encodeOutput(postArray[i][1].title);
                 const postCardMainText = document.createElement('p');
-                postCardMainText.innerText = postArray[i][1].body;
+                postCardMainText.textContent = encodeOutput(postArray[i][1].body);
                 const postOptions = document.createElement('div');
                 postOptions.setAttribute('class','d-flex');
                 const author = document.createElement('p');
-                author.innerText = `Author: ${postArray[i][1].blogusername}`;
+                author.textContent = encodeOutput(`Author: ${postArray[i][1].blogusername}`);
 
                 // Append main card to mainContent div, then each element of the card to postcard
                 document.getElementById('mainContent').appendChild(postCard);
@@ -45,7 +45,7 @@ async function loadPosts(){
 
                     if (username.toString(CryptoJS.enc.Utf8) === postArray[i][1].blogusername) {
                         const deletePostButton = document.createElement('p');
-                        deletePostButton.innerText = 'Delete Post';
+                        deletePostButton.textContent = 'Delete Post';
                         deletePostButton.style.color = 'blue';
                         deletePostButton.setAttribute('class', 'ms-auto');
 
