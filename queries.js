@@ -26,7 +26,29 @@ const checkUserCredentials = (req, res) => {
             try{
                 verify(result.rows[0].bloggerpassword, password).then(data => {
                     if(data){
-                        res.status(201).send({status:201, message: "Logged in", username:username});
+                        // authenticate session
+                        req.session.authenticated = true;
+
+                        // Delete any previous sessions from the session database
+                        pool.query("DELETE FROM dss.session", (error, result) => {
+                                if (err) throw err;
+                            })
+
+                        try { // Hashing the username with argon2 to create the session id and store it in database
+                            hash(username).then(sessionHash => {
+
+                                pool.query("INSERT INTO dss.session (bloggerusername, bloggersessionhash) VALUES ($1, $2)",
+                                    [username, sessionHash], (error, result) => {
+                                        if (err) throw err;
+                                        // assign the current user in server session storage
+                                        req.session.user = {sessionHash};
+
+                                        res.status(201).send({status:201,session:req.session});
+                                    })
+                            });
+                        } catch (err){
+                            res.status(200).send({status:200 , message: "Could not hash session ID"});
+                        }
                     } else{
                         res.status(200).send({status:200, message:"Incorrect username or password"});
                     }
@@ -94,7 +116,7 @@ const createAccount = (req, res) => {
                     [username,value,email], (err,result) =>{
                         if(err) throw err;
                         else {
-                        res.status(201).send({status: 201, message: "Account created"});
+                            res.status(201).send({status: 201, message: "Account created"});
                     }})
                 });
                 } catch(err){
@@ -169,6 +191,40 @@ const searchPosts = (req, res) => {
     });
 }
 
+// If session memory contains user, compare session to hashed id in the database, returning successful if they match
+const getSession = (req, res) => {
+    // if the session store contains a user
+    if(req.session.user !== undefined){
+        // hashed session id
+        let activeSession = req.session.user.sessionHash
+
+        // compare hashed session store id with the session id in the database - if they match, return username
+        pool.query('SELECT bloggerusername FROM dss.session WHERE bloggersessionhash = $1',
+            [activeSession],
+            (error, result) => {
+                if (result.rows.length > 0){
+                    console.log(result.rows)
+                    res.status(201).send({status:201, result:result.rows[0]});
+                } else {
+                    console.log("no session found")
+                    res.status(200).send({status:200, message:'No session found'})
+                }
+            })
+    } else {
+        console.log("no user logged in!")
+        res.status(200).send({status: 200, message:'No session active'})
+    }
+}
+
+const deleteSession = (req, res) => {
+    let username = req.body.username;
+
+    pool.query("DELETE FROM dss.session WHERE bloggerusername = $1", [username], (error, result) => {
+        if (error) throw error;
+        res.status(201).send({status:201});
+    })
+}
+
 
 module.exports = {
     getAllPosts,
@@ -176,5 +232,7 @@ module.exports = {
     createAccount,
     postContent,
     deletePost,
-    searchPosts
+    searchPosts,
+    getSession,
+    deleteSession
 }

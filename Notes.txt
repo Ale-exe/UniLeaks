@@ -3,5 +3,4 @@ npm install pg
 npm install -g bower
 bower install crypto-js
 npm install multer
-
-Amazon: CREATE EXTENSION pgcrypto in pgadmin
+npm install express-session

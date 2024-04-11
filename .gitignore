@@ -1,7 +1,5 @@
 /node_modules/
 databaseConnection.js
-storedHash.json
-passwordKeys.json
 /bower_components/
 .DS_store
 /uploads/*

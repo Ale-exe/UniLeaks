@@ -1,48 +1,43 @@
-// Determines if a user has an active session and provides different page content based on this
-async function loadSession(){
-    // if a session cookie called 'bloggerLoggedIn' exists
-    if(getCookieByKey('bloggerLoggedIn') !== undefined || getCookieByKey('bloggerLoggedIn') == ""){
+async function loadSession() {
+    await fetch('/getsession')
+        .then(res => res.json())
+        .then((sessionData) => {
+            console.log(sessionData);
 
-        // create paragraph to welcome user
-        const loggedInText = document.createElement('p');
+            if (sessionData.status === 201) {
+                // create paragraph to welcome user
+                const loggedInText = document.createElement('p');
+                // gets username from sessionData
+                loggedInText.textContent = `Logged in as ${sessionData.result.bloggerusername}...`;
 
-        // Decrypts the session cookie and displays it on screen to inform user who is logged on
+                loggedInText.style.fontWeight = 'bold';
+                loggedInText.setAttribute('class', 'ms-auto')
+                document.getElementById('loginDiv').appendChild(loggedInText);
 
-        const key = await retrieveKey('session');
+                // create logout button that deletes cookie on click
+                const logout = document.createElement('p');
+                logout.textContent = 'Logout';
+                logout.style.color = 'blue';
+                // On click, deletes cookie, logging user out
+                logout.addEventListener('click', () => {
+                    logOut();
+                })
+                document.getElementById('loginDiv').appendChild(logout);
+                return true;
+            } else {
+                // Dynamically create paragraph to prompt user to log in - Links to login form
+                const hyper = document.createElement('a');
+                hyper.href = "/login";
+                hyper.textContent = "here";
 
-        let user = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'), key);
-        loggedInText.textContent = `Logged in as ${user.toString(CryptoJS.enc.Utf8)}...`;
+                const loginText = document.createElement('p');
+                loginText.textContent = "Not currently logged in. To post, log in ";
+                loginText.appendChild(hyper);
+                document.getElementById('mainContent').appendChild(loginText);
 
-        loggedInText.style.fontWeight = 'bold';
-        loggedInText.setAttribute('class','ms-auto')
-        document.getElementById('loginDiv').appendChild(loggedInText);
-
-        // create logout button that deletes cookie on click
-        const logout = document.createElement('p');
-        logout.textContent = 'Logout';
-        logout.style.color = 'blue';
-        // On click, deletes cookie, logging user out
-        logout.addEventListener('click', () => {
-            document.cookie = `bloggerLoggedIn =; expires = Thu, 01 Jan 1970 00:00:00 UTC;`;
-            window.location.reload();
+                // Hide post form
+                document.getElementById('postCreationForm').style.display = 'none';
+                return false;
+            }
         })
-        document.getElementById('loginDiv').appendChild(logout);
-
-
-        // if it doesn't exist, do not render a post button and instead prompt them to log in
-    } else {
-        // Dynamically create paragraph to prompt user to log in - Links to login form
-        const hyper = document.createElement('a');
-        hyper.href = "/login";
-        hyper.textContent = "here";
-
-        const loginText = document.createElement('p');
-        loginText.textContent = "Not currently logged in. To post, log in ";
-        loginText.appendChild(hyper);
-        document.getElementById('mainContent').appendChild(loginText);
-
-        // Hide post form
-        document.getElementById('postCreationForm').style.display = 'none';
-    }
 }
-

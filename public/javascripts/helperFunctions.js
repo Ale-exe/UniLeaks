@@ -73,3 +73,12 @@ function encodeOutput(text){
     });
 }
 
+// gets the username of the user logged in
+async function getSession() {
+    const hashResponse = await fetch("/getsession")
+    const json = await hashResponse.json()
+
+    if (json.status === 201) {
+        return json.result.bloggerusername;
+    }
+}

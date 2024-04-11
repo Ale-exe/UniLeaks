@@ -16,15 +16,8 @@ async function login(){
     })
         .then(res => res.json())
         .then((response) => {
+            console.log(response)
             if (response.status === 201){
-          
-                // Generates a random key for the session cookie
-                const rand = randomKey(32);
-
-                // give session cookie encrypted using AES - strongest hashing algorithm
-                // - cookie set to expire after 60 minutes
-                document.cookie = `bloggerLoggedIn = ${CryptoJS.AES.encrypt(data.username, rand)}; expires = ${setCookieExpiry(60)}`;
-                keyToJSON('session',rand);
 
                 window.location.href = '/'
             }  else{
@@ -120,6 +113,29 @@ async function register(){
                 const errorAlert = document.getElementById('regAlert');
                 errorAlert.style.visibility = 'visible';
                 errorAlert.textContent = encodeOutput(response.message);
+            }
+        })
+}
+
+async function logOut(){
+    console.log(await getSession());
+    // the name of the session owner
+    let sessionObj = {username:await getSession()};
+
+    await fetch('/deletesession', {
+        method: 'POST',
+        body: JSON.stringify(sessionObj),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(res => res.json())
+        .then((response) => {
+            if (response.status === 201){
+                window.location.reload();
+
+            }  else{
+                console.log("logout failed")
             }
         })
 }

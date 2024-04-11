@@ -1,6 +1,6 @@
 async function loadSearchedPosts(){
     let searchTerm = {searchterm:document.getElementById('blogSearch').value = getCookieByKey('bloggersearchterm')};
-    const key = await retrieveKey('session');
+    const username = await getSession();
 
     document.getElementById('searchResult').textContent = `Search results for: ${searchTerm.searchterm}`;
 
@@ -15,8 +15,7 @@ async function loadSearchedPosts(){
         .then(response => response.json())
         .then(data => {
             if (data.status === 201){
-                const postArray = Object.entries(data.result);
-                console.log(postArray);
+                const postArray = Object.entries(data);
 
                 // For each array entry, create a "card" to hold data
                 for (let i = 0; i < postArray.length; i++){
@@ -55,19 +54,16 @@ async function loadSearchedPosts(){
                     postOptions.appendChild(author);
 
                     // IF user logged on matches post author then render delete button
-                    if(getCookieByKey('bloggerLoggedIn') !== undefined) {
-                        let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'), key);
-
-                        if (username.toString(CryptoJS.enc.Utf8) === postArray[i][1].blogusername) {
+                    if(username !== undefined) {
+                        if (username === postArray[i][1].blogusername) {
                             const deletePostButton = document.createElement('p');
-                            deletePostButton.innerText = 'Delete Post';
+                            deletePostButton.textContent = 'Delete Post';
                             deletePostButton.style.color = 'blue';
                             deletePostButton.setAttribute('class', 'ms-auto');
 
                             deletePostButton.addEventListener('click', () => {
                                 deletePost(postArray[i][1].postid);
                             })
-
                             postOptions.appendChild(deletePostButton);
                         }
                     }

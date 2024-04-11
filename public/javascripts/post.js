@@ -1,15 +1,20 @@
 // loads posts on home page
 async function loadPosts(){
-
-    // fetches key from JSON
-    const key = await retrieveKey('session');
-
-    // fetches from endpoint 'getallposts' (gets all posts from database)
+    // gets username of logged in user
+    const username = await getSession();
+        // fetches from endpoint 'getallposts' (gets all posts from database)
     await fetch('/posts/getallposts')
         .then(response => response.json())
         .then(data => {
 
-             // Turn result into array
+
+
+
+
+
+
+
+
             const postArray = Object.entries(data);
 
             // For each array entry, create a "card" to hold data
@@ -36,6 +41,7 @@ async function loadPosts(){
                 const author = document.createElement('p');
                 author.textContent = encodeOutput(`Author: ${postArray[i][1].blogusername}`);
 
+
                 // Append main card to mainContent div, then each element of the card to postcard
                 document.getElementById('mainContent').appendChild(postCard);
                 if (postArray[i][1].filepath) {
@@ -48,10 +54,8 @@ async function loadPosts(){
                 postOptions.appendChild(author);
 
                 // IF user logged on matches post author then render delete button
-                if(getCookieByKey('bloggerLoggedIn') !== undefined) {
-                    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'), key);
-
-                    if (username.toString(CryptoJS.enc.Utf8) === postArray[i][1].blogusername) {
+                if(username !== undefined) {
+                    if (username === postArray[i][1].blogusername) {
                         const deletePostButton = document.createElement('p');
                         deletePostButton.textContent = 'Delete Post';
                         deletePostButton.style.color = 'blue';
@@ -60,14 +64,13 @@ async function loadPosts(){
                         deletePostButton.addEventListener('click', () => {
                             deletePost(postArray[i][1].postid);
                         })
-
                         postOptions.appendChild(deletePostButton);
                     }
                 }
             }
-
         })
 }
+
 
 async function createPost(){
     const form = document.getElementById('postCreationForm');
@@ -98,11 +101,9 @@ async function createPost(){
             filepath = data.path;
         });
 
-    const key = await retrieveKey('session');
-    // Decrypt session cookie before passing it to backend
-    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
-    let extraData = {       
-        username: username.toString(CryptoJS.enc.Utf8),
+    let extraData = {
+        // get session from database and filepath to send to
+        username: await getSession(),
         path: filepath
     };
 
@@ -131,10 +132,8 @@ async function createPost(){
 
 // Deletes post using the passed post id
 async function deletePost(id){
-    const key = await retrieveKey('session');
 
-    let username = CryptoJS.AES.decrypt(getCookieByKey('bloggerLoggedIn'),key);
-    const delObj = {postid: id, username: username.toString(CryptoJS.enc.Utf8)};
+    const delObj = {postid: id, username: await getSession()};
 
     await fetch('/posts/deletepost', {
         method: 'POST',

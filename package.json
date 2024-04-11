@@ -19,5 +19,8 @@
     "nodemon": "^3.1.0",
     "pg": "^8.11.3",
     "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "express-session": "^1.18.0"
   }
 }
