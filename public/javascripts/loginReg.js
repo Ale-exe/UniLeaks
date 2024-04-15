@@ -6,12 +6,16 @@ async function login(){
     const form = document.getElementById('loginForm');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
     await fetch('/users/checkcredentials', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken
         }
     })
         .then(res => res.json())
@@ -29,6 +33,7 @@ async function login(){
                 // add 1 to count of incorrect attempts - lock out for 30 mins?
             }
         })
+    
 }
 
 // Compares user entered password with database password decrypted with key

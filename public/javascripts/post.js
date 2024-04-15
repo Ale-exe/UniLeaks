@@ -2,24 +2,27 @@
 async function loadPosts(){
     // gets username of logged in user
     const username = await getSession();
+    let csrfToken = '';
         // fetches from endpoint 'getallposts' (gets all posts from database)
-    await fetch('/posts/getallposts')
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+
+    await fetch('/posts/getallposts', {
+         'x-csrf-token': csrfToken
+    })
         .then(response => response.json())
         .then(data => {
-
-
-
-
-
-
-
-
-
             const postArray = Object.entries(data);
+
+                console.log("Post Array:"); 
+                console.log(postArray);
+
 
             // For each array entry, create a "card" to hold data
             for (let i = 0; i < postArray.length; i++){
-      
+                console.log(postArray[i][1]);
+
                 // Dynamically create cards for each row of data from the post table
                 const postCard = document.createElement('div');
                 postCard.setAttribute('class','card my-4');
@@ -87,13 +90,17 @@ async function createPost(){
     else if(!validatePost(data.blogtitle, data.blodybody)){
         return postErrorMessage("This type of content is not permitted");
     }
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
 
     await fetch('/storefileupload', {
         method: 'POST',
         body: formData,
         headers: {
-            'Access-Control-Allow-Headers':'*',
-            'Boundary': 'arbitrary-boundary'
+            'Boundary': 'arbitrary-boundary',
+             'x-csrf-token': csrfToken
         }
     })
         .then(res => res.json())
@@ -110,15 +117,20 @@ async function createPost(){
     // Append the username to the formdata from the post
     const appendedData = Object.assign(data, extraData);
 
+       await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+
     await fetch('/posts/postcontent', {
         method: 'POST',
         body: JSON.stringify(appendedData),
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Headers':'*'
+            'x-csrf-token': csrfToken
         }
     })
         .then(response => {
+            console.log(response);
             if (response.status === 201){
                 // If successful, reload to show new post
                 window.location.reload();
@@ -135,12 +147,17 @@ async function deletePost(id){
 
     const delObj = {postid: id, username: await getSession()};
 
+    let csrfToken = '';
+       await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+
     await fetch('/posts/deletepost', {
         method: 'POST',
         body: JSON.stringify(delObj),
         headers:{
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Headers':'*'
+            'x-csrf-token': csrfToken,
         }
     })
         .then(response => {

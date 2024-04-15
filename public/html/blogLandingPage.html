@@ -37,7 +37,7 @@
                     </div>
                     <button type="button" class="btn bg-primary" id="searchIcon" onclick="
                     document.cookie = `bloggersearchterm= ${document.getElementById('blogSearch').value}`;
-                    window.location.href = '/search'">
+                     window.location.href = '/search'">
                     <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -59,7 +59,7 @@
                     <textarea class="form-control" required placeholder="Enter your post content here" name="blogbody" id="inputBlogBody" style="height: 125px"></textarea>
                     <label for="inputBlogBody" class="form-label">Post Content: <a style="font-size: 10px">(max character count: 500)</a></label>
                 </div>
-
+                <input type="hidden" class="form-control" name="csrf" id="csrf"/>
                 <p>Click on the "Choose File" button to upload a file:</p>
                 <input type="file" id="myFile" name="file">
                 </br>

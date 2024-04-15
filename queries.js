@@ -16,6 +16,7 @@ const getAllPosts = (req, res) => {
 
 // Checks if username/ password match those stored in the user table
 const checkUserCredentials = (req, res) => {
+
     const username = req.body.username;
     const password = req.body.password;
 
@@ -129,6 +130,7 @@ const createAccount = (req, res) => {
 
 // Checks if user exists in database then adds post content to posts table
 const postContent = (req, res) => {
+
     const username = req.body.username;
     const title = req.body.blogtitle;
     const body = req.body.blogbody;
@@ -187,7 +189,7 @@ const searchPosts = (req, res) => {
     // select all post titles and bodies that include the searchterm
     pool.query("SELECT * FROM dss.blogposts WHERE (LOWER(title) LIKE LOWER('%" + searchTerm + "%')) OR LOWER(body) LIKE LOWER('%" + searchTerm + "%')", (err, result) => {
             console.log(result.rows);
-            res.status(201).send({status:201, result:result.rows});
+            res.status(201).json(result.rows);
     });
 }
 

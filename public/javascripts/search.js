@@ -4,21 +4,28 @@ async function loadSearchedPosts(){
 
     document.getElementById('searchResult').textContent = `Search results for: ${searchTerm.searchterm}`;
 
+     let csrfToken = '';
+       await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
     await fetch('/searchposts', {
         method: 'POST',
         body: JSON.stringify(searchTerm),
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Headers':'*'
+            'x-csrf-token': csrfToken,
         }
     })
         .then(response => response.json())
         .then(data => {
-            if (data.status === 201){
+            console.log("Data:");
                 const postArray = Object.entries(data);
 
                 // For each array entry, create a "card" to hold data
                 for (let i = 0; i < postArray.length; i++){
+
+                    console.log(postArray[i][1]);
+
 
                     // Dynamically create cards for each row of data from the post table
                     const postCard = document.createElement('div');
@@ -69,8 +76,7 @@ async function loadSearchedPosts(){
                     }
                 }
 
-            }  else{
-                console.log("failure");
-            }
         })
+        .catch(err => {console.log(err)})
+
 }

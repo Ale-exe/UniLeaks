@@ -1,5 +1,12 @@
 async function loadSession() {
-    await fetch('/getsession')
+
+     let csrfToken = '';
+       await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+    await fetch('/getsession', {
+        'x-csrf-token': csrfToken,
+    })
         .then(res => res.json())
         .then((sessionData) => {
             console.log(sessionData);
