@@ -189,6 +189,10 @@ async function deletePost(id){
 
 // gets post content for a specific post ID, then auto-populates content in the form
 async function editPostContent(id){
+     let csrfToken = '';
+       await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
 
     const postObj = {id:id}
 
@@ -197,7 +201,7 @@ async function editPostContent(id){
         body: JSON.stringify(postObj),
         headers:{
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Headers':'*'
+            'x-csrf-token': csrfToken        
         }
     })
         .then(res => res.json())
@@ -212,7 +216,10 @@ async function editPostContent(id){
 
 // Updates the database with the new details
 async function updatePostContent(){
-
+   let csrfToken = '';
+       await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
     const form = document.getElementById('editPostForm');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
@@ -222,6 +229,7 @@ async function updatePostContent(){
     await fetch('/posts/updatepost', {
         method: 'POST',
         body: formData,
+        headers:{'x-csrf-token': csrfToken},
 
     })
         .then(res => res.json())
