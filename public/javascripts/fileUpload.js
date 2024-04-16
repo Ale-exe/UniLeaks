@@ -23,6 +23,7 @@ const storeFileUpload = router.post('/storefileupload', upload.single('file'), (
     res.json({ message: 'File uploaded successfully!', path : req.file.filename});
   });
 
+
 module.exports = {
     storeFileUpload
 }

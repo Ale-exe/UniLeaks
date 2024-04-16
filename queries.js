@@ -14,6 +14,18 @@ const getAllPosts = (req, res) => {
     });
 }
 
+const getPostById = (req, res) => {
+    const id = req.body.id;
+    pool.query('SELECT * FROM dss.blogposts WHERE postid = $1', [id], (err, result) => {
+        // if records are available, return successful status else, return unsuccessful message
+        if(result.rows.length > 0){
+            res.status(201).send({status: 201, result: result.rows});
+        } else {
+            res.status(200).send({status: 200, message: 'Post could not be edited, please refresh the page and try again'});
+        }
+    });
+}
+
 // Checks if username/ password match those stored in the user table
 const checkUserCredentials = (req, res) => {
 
@@ -193,6 +205,36 @@ const searchPosts = (req, res) => {
     });
 }
 
+const updatePost = (req, res) => {
+    console.log("in updatePost");
+    console.log(req.body);
+    const title = req.body.blogtitle;
+    const body = req.body.blogbody;
+    const file = req.body.file;
+
+    if(file !== ''){
+        pool.query('UPDATE dss.blogposts SET title = $1, body = $2, filepath = $3',
+            [title, body, file], (error, result) => {
+                console.log(result.rows)
+                if (result.rows > 0){
+                    res.status(201).send(result.rows);
+                } else{
+                    res.status(200).send(result.rows);
+                }
+            })
+    } else {
+        pool.query('UPDATE dss.blogposts SET title = $1, body = $2',
+            [title, body], (error, result) => {
+                console.log(result.rows)
+                if (result.rows > 0){
+                    res.status(201).send(result.rows);
+                } else{
+                    res.status(200).send(result.rows);
+                }
+            })
+    }
+}
+
 // If session memory contains user, compare session to hashed id in the database, returning successful if they match
 const getSession = (req, res) => {
     // if the session store contains a user
@@ -230,11 +272,13 @@ const deleteSession = (req, res) => {
 
 module.exports = {
     getAllPosts,
+    getPostById,
     checkUserCredentials,
     createAccount,
     postContent,
     deletePost,
     searchPosts,
     getSession,
-    deleteSession
+    deleteSession,
+    updatePost
 }

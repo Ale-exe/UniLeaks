@@ -62,12 +62,28 @@ async function loadPosts(){
                         const deletePostButton = document.createElement('p');
                         deletePostButton.textContent = 'Delete Post';
                         deletePostButton.style.color = 'blue';
-                        deletePostButton.setAttribute('class', 'ms-auto');
+                        deletePostButton.setAttribute('class','ms-3');
 
                         deletePostButton.addEventListener('click', () => {
                             deletePost(postArray[i][1].postid);
                         })
-                        postOptions.appendChild(deletePostButton);
+
+                        const editPostButton = document.createElement('p');
+                        editPostButton.textContent = 'Edit Post';
+                        editPostButton.style.color = 'blue';
+                        editPostButton.setAttribute('class', 'ms-auto');
+
+                        editPostButton.setAttribute("data-bs-toggle", "offcanvas");
+                        editPostButton.setAttribute("href", "#offcanvasEdit");
+                        editPostButton.setAttribute("role", "button");
+                        editPostButton.setAttribute("data-bs-title", "Edit product");
+
+
+                        editPostButton.addEventListener('click', () => {
+                            editPostContent(postArray[i][1].postid)
+                        })
+                        postOptions.appendChild(editPostButton);
+                        editPostButton.after(deletePostButton);
                     }
                 }
             }
@@ -168,5 +184,48 @@ async function deletePost(id){
                 // TODO: Create error message
                 console.log("failure");
             }
+        })
+}
+
+// gets post content for a specific post ID, then auto-populates content in the form
+async function editPostContent(id){
+
+    const postObj = {id:id}
+
+    await fetch('/posts/getpostbyid', {
+        method: 'POST',
+        body: JSON.stringify(postObj),
+        headers:{
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Headers':'*'
+        }
+    })
+        .then(res => res.json())
+        .then(data => {
+            const updateForm = document.getElementById('editPostForm');
+            updateForm.postId.value = data.result[0].postid;
+            updateForm.blogtitle.value = data.result[0].title;
+            updateForm.blogbody.value = data.result[0].body;
+            updateForm.productfile.value = data.result[0].filepath;
+        })
+}
+
+// Updates the database with the new details
+async function updatePostContent(){
+
+    const form = document.getElementById('editPostForm');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    formData.append('file', data.postimage.name);
+
+
+    await fetch('/posts/updatepost', {
+        method: 'POST',
+        body: formData,
+
+    })
+        .then(res => res.json())
+        .then(data => {
+            window.location.reload();
         })
 }

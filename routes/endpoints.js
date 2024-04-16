@@ -4,6 +4,17 @@ const misc = require('../archive/jsonHandler');
 const upload = require('../public/javascripts/fileUpload');
 let endpoint_router = express.Router();
 const session = require('express-session');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+const fileUpload = multer({ storage: storage });
 
 const {csrfSync} = require('csrf-sync');
 
@@ -26,10 +37,15 @@ endpoint_router.use(csrfSynchronisedProtection);
 // blogpost queries
 endpoint_router.get('/posts/getallposts', queries.getAllPosts);
 
+endpoint_router.post('/posts/getpostbyid', queries.getPostById);
+
 endpoint_router.post('/posts/postcontent', queries.postContent);
 
 endpoint_router.post('/posts/deletepost', queries.deletePost);
 
+endpoint_router.post('/posts/updatepost', fileUpload.single('postimage'), queries.updatePost, (req,res) =>{
+    res.json({ message: 'File uploaded successfully!', path : req.file});
+});
 
 // user queries
 endpoint_router.post('/users/checkcredentials', queries.checkUserCredentials);
