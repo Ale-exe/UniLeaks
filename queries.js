@@ -208,13 +208,14 @@ const searchPosts = (req, res) => {
 const updatePost = (req, res) => {
     console.log("in updatePost");
     console.log(req.body);
+    const id = req.body.id;
     const title = req.body.blogtitle;
     const body = req.body.blogbody;
     const file = req.body.file;
 
     if(file !== ''){
-        pool.query('UPDATE dss.blogposts SET title = $1, body = $2, filepath = $3',
-            [title, body, file], (error, result) => {
+        pool.query('UPDATE dss.blogposts SET title = $1, body = $2, filepath = $3 WHERE postid = $4',
+            [title, body, file, id], (error, result) => {
                 console.log(result.rows)
                 if (result.rows > 0){
                     res.status(201).send(result.rows);
@@ -223,8 +224,8 @@ const updatePost = (req, res) => {
                 }
             })
     } else {
-        pool.query('UPDATE dss.blogposts SET title = $1, body = $2',
-            [title, body], (error, result) => {
+        pool.query('UPDATE dss.blogposts SET title = $1, body = $2 WHERE postid = $3',
+            [title, body, id], (error, result) => {
                 console.log(result.rows)
                 if (result.rows > 0){
                     res.status(201).send(result.rows);
