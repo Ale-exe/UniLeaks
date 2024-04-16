@@ -43,11 +43,17 @@ async function retrieveKey(type){
     let typeObj = {type:type};
     let json = JSON.stringify(typeObj);
 
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+
     return fetch('/getkeyfromJSON', {
         method: 'POST',
         body: json,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken,
         }
     })
         .then((response) => {
@@ -76,7 +82,13 @@ function encodeOutput(text){
 
 // gets the username of the user logged in
 async function getSession() {
-    const hashResponse = await fetch("/getsession")
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+    const hashResponse = await fetch("/getsession", {
+        'x-csrf-token': csrfToken
+    })
     const json = await hashResponse.json()
 
     if (json.status === 201) {

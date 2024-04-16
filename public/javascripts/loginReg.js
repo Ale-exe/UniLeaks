@@ -7,6 +7,7 @@ async function login(){
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
     let csrfToken = '';
+    
     await fetch('/csrf-token').then(res => res.json()).then(data => {
         csrfToken = data.token;
     })
@@ -39,11 +40,18 @@ async function login(){
 // Compares user entered password with database password decrypted with key
 async function generateCookie(data){
     // Checks if the user entered password matches with the database password decrypted by the key
+
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+
     await fetch('/users/checkcredentials', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken
         }
     })
         .then(res => res.json())
@@ -73,12 +81,18 @@ async function generateCookie(data){
 async function keyToJSON(type, hash){
     let hashStorage = {type:type, hash:hash};
     let json = JSON.stringify(hashStorage);
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+  
 
     await fetch('/editJSON', {
         method: 'POST',
         body: json,
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken
         }
     })
         .then(res => res.json())
@@ -101,11 +115,18 @@ async function register(){
     const data = Object.fromEntries(formData);
 
     // Store in database. Password is encrypted database side with the random key
+
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
+  
     await fetch('/users/createaccount', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+             'x-csrf-token': csrfToken
         }
     })
         .then(res => res.json())
@@ -127,11 +148,16 @@ async function logOut(){
     // the name of the session owner
     let sessionObj = {username:await getSession()};
 
+    let csrfToken = '';
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })
     await fetch('/deletesession', {
         method: 'POST',
         body: JSON.stringify(sessionObj),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken
         }
     })
         .then(res => res.json())
