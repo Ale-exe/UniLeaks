@@ -99,12 +99,18 @@ async function createPost(){
     
     const data = Object.fromEntries(formData);
 
+    // VALIDATION
     // If post fails the character count check then return failure
     if (!validateWordcount(data.blogtitle, data.blogbody)){
         return postErrorMessage("Please ensure posts meet character count constraints");
     }
     else if(!validatePost(data.blogtitle, data.blodybody)){
         return postErrorMessage("This type of content is not permitted");
+    }
+    // Check whether image has a supported file extension
+    if (data.file) {
+        console.log("text.match(pattern):");
+        console.log(data.file.name.match(".\(jpg|png|gif)$"));
     }
     let csrfToken = '';
     await fetch('/csrf-token').then(res => res.json()).then(data => {
@@ -149,7 +155,7 @@ async function createPost(){
             console.log(response);
             if (response.status === 201){
                 // If successful, reload to show new post
-                window.location.reload();
+                // window.location.reload();
 
             }  else{
                 // TODO: Create error message
