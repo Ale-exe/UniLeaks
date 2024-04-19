@@ -108,27 +108,29 @@ async function createPost(){
         return postErrorMessage("This type of content is not permitted");
     }
     // Check whether image has a supported file extension
-    if (data.file) {
-        console.log("text.match(pattern):");
-        console.log(data.file.name.match(".\(jpg|png|gif)$"));
+    if (data.file.name != "") {
+        // console.log("text.match(pattern):");
+        // console.log(data.file.name.match(".\(jpg|png|gif)$"));
     }
     let csrfToken = '';
     await fetch('/csrf-token').then(res => res.json()).then(data => {
         csrfToken = data.token;
     })
 
-    await fetch('/storefileupload', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'Boundary': 'arbitrary-boundary',
-             'x-csrf-token': csrfToken
-        }
-    })
-        .then(res => res.json())
-        .then(data => {
-            filepath = data.path;
-        });
+    if (data.file.name != "") { //if file exists
+        await fetch('/storefileupload', { //upload it
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Boundary': 'arbitrary-boundary',
+                'x-csrf-token': csrfToken
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                filepath = data.path;
+            });
+    }
 
     let extraData = {
         // get session from database and filepath to send to
@@ -139,7 +141,7 @@ async function createPost(){
     // Append the username to the formdata from the post
     const appendedData = Object.assign(data, extraData);
 
-       await fetch('/csrf-token').then(res => res.json()).then(data => {
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
         csrfToken = data.token;
     })
 
