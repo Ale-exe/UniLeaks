@@ -3,3 +3,5 @@ databaseConnection.js
 /bower_components/
 .DS_store
 /uploads/*
+/public/images/*
+!/public/images/unileaks.png

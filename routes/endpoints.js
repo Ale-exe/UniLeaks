@@ -2,9 +2,11 @@ const express = require('express');
 const queries = require('../queries');
 const misc = require('../archive/jsonHandler');
 const upload = require('../public/javascripts/fileUpload');
+const helper = require('../public/javascripts/helperFunctions');
 let endpoint_router = express.Router();
 const session = require('express-session');
 const multer = require('multer');
+const textToImage = require('text-to-image');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -47,6 +49,22 @@ endpoint_router.post('/posts/updatepost', fileUpload.single('postimage'), querie
     res.json({ message: 'File uploaded successfully!', path : req.file});
 });
 
+endpoint_router.get("/generate-captcha", (req, res) => {
+       const key = helper.randomKey(6);
+
+            const captcha = textToImage.generate(key, {
+
+            }).then(function(dataUri){
+                req.session.captchaKey = key;
+                res.json({uri: dataUri})
+                console.log(req.session);
+            });
+        }
+    
+    
+    
+);
+
 // user queries
 endpoint_router.post('/users/checkcredentials', queries.checkUserCredentials);
 
@@ -68,3 +86,4 @@ module.exports = endpoint_router;
 endpoint_router.get('/getsession', queries.getSession);
 
 endpoint_router.post('/deletesession', queries.deleteSession);
+

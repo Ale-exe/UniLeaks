@@ -31,7 +31,7 @@ function postErrorMessage(text){
 // Generates a random key using random characters from array
 function randomKey(length){
     let series = '';
-    const letterArr = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-=/<>#';
+    const letterArr = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     for (let i = 0; i < length; i++){
         series += letterArr[Math.floor(Math.random() * (letterArr.length))];
@@ -94,4 +94,8 @@ async function getSession() {
     if (json.status === 201) {
         return json.result.bloggerusername;
     }
+}
+
+module.exports = {
+    randomKey,
 }
