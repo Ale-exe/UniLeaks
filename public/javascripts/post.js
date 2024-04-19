@@ -104,7 +104,7 @@ async function createPost(){
     if (!validateWordcount(data.blogtitle, data.blogbody)){
         return postErrorMessage("Please ensure posts meet character count constraints");
     }
-    else if(!validatePost(data.blogtitle, data.blodybody)){
+    else if(!validatePost(data.blogtitle, data.blogbody)){
         return postErrorMessage("This type of content is not permitted");
     }
     // Check whether image has a supported file extension
