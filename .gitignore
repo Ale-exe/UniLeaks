@@ -5,3 +5,4 @@ databaseConnection.js
 /uploads/*
 /public/images/*
 !/public/images/unileaks.png
+passwordKeys.json
