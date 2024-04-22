@@ -5,5 +5,7 @@ databaseConnection.js
 /uploads/*
 /public/images/*
 !/public/images/unileaks.png
+/public/images/*
+!/public/images/unileaks.png
 passwordKeys.json
 .gitignore

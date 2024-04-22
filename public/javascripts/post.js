@@ -11,17 +11,17 @@ async function loadPosts(){
     await fetch('/posts/getallposts', {
          'x-csrf-token': csrfToken
     })
+
+
+
+
+
         .then(response => response.json())
         .then(data => {
             const postArray = Object.entries(data);
 
-                console.log("Post Array:"); 
-                console.log(postArray);
-
-
             // For each array entry, create a "card" to hold data
             for (let i = 0; i < postArray.length; i++){
-                console.log(postArray[i][1]);
 
                 // Dynamically create cards for each row of data from the post table
                 const postCard = document.createElement('div');
@@ -33,6 +33,12 @@ async function loadPosts(){
                     postCardImage.setAttribute('class', 'card-img-top');
                     postCardImage.setAttribute('src', src='images/'+postArray[i][1].filepath);
                 }
+                postCardImage.style.justifySelf = 'center';
+                postCardImage.style.height = '40%';
+                postCardImage.style.width = '40%';
+                postCardImage.style.display = 'block';
+                postCardImage.style.marginLeft = 'auto';
+                postCardImage.style.marginRight = 'auto';
                 const postCardBody = document.createElement('div');
                 postCardBody.setAttribute('class','card-body');
                 const postCardTitle = document.createElement('h4');
@@ -108,7 +114,7 @@ async function createPost(){
         return postErrorMessage("This type of content is not permitted");
     }
     // Check whether image has a supported file extension
-    if (data.file.name != "" && !data.file.name.match(".\(jpg|png|gif)$")) {
+    if (data.file.name !== "" && !data.file.name.match(".\(jpg|png|gif)$")) {
         return postErrorMessage("Only the following file formats are permitted: jpg, png and gif");
     }
     let csrfToken = '';
@@ -116,7 +122,7 @@ async function createPost(){
         csrfToken = data.token;
     })
 
-    if (data.file.name != "") { //if file exists
+    if (data.file.name !== "") { //if file exists
         await fetch('/storefileupload', { //upload it
             method: 'POST',
             body: formData,
@@ -156,7 +162,7 @@ async function createPost(){
             console.log(response);
             if (response.status === 201){
                 // If successful, reload to show new post
-                // window.location.reload();
+                window.location.reload();
 
             }  else{
                 // TODO: Create error message

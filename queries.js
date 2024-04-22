@@ -226,7 +226,6 @@ const updatePost = (req, res) => {
     console.log("File: " + file);
 
     if(file !== ''){
-        console.log('in if')
         pool.query('UPDATE dss.blogposts SET title = $1, body = $2, filepath = $3 WHERE postid = $4',
             [title, body, file, id], (error, result) => {
                 console.log(result.rows)
@@ -237,7 +236,6 @@ const updatePost = (req, res) => {
                 }
             })
     } else {
-        console.log("in else");
         pool.query('UPDATE dss.blogposts SET title = $1, body = $2 WHERE postid = $3',
             [title, body, id], (error, result) => {
                 console.log(result.rows)

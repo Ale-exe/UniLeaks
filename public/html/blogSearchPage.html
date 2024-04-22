@@ -73,6 +73,54 @@
                 Reset
             </button>
         </form>
+
+        <div class="offcanvas" tabindex="-1" id="offcanvasEditSearch" style="height: 53%; left: 34%; bottom: 22%" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header" id="offcanvas-edit-header">
+                <h2 class="offcanvas-title" id="offcanvasEditExampleLabel">Edit Post</h2>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body" id="editFormDiv">
+                <form id="editPostForm">
+                    <h5 id="editRequiredText">Please ensure content abides to our UniLeaks policy</h5>
+                    <div class="mb-0" style="height: 10px; visibility: hidden">
+                        <input type="number" class="form-control" name="postId" id="postId">
+
+                    </div>
+                    <div class="mb-3 mt-0 form-floating">
+                        <input type="text" class="form-control" required placeholder="Max character count: 50" name="blogtitle" id="editInputBlogTitle">
+                        <label for="inputBlogTitle" class="form-label">Post Title: <a style="font-size: 10px">(max character count: 50)</a></label>
+                    </div>
+                    <div class="mb-3 form-floating">
+                        <textarea class="form-control" required placeholder="Enter your post content here" name="blogbody" id="editInputBlogBody" style="height: 125px"></textarea>
+                        <label for="inputBlogBody" class="form-label">Post Content: <a style="font-size: 10px">(max character count: 500)</a></label>
+                    </div>
+
+                    <label for="uploadFile">Update File (leave choose file blank if no change desired)</label>
+                    <div class="row g-2 d-flex" id="uploadFile">
+                        <div class="col form-floating mb-3 col-sm-5">
+                            <input type="text" class="form-control" id="editFile" name="productfile" placeholder="e.g. 'sleeping bag.jpg'" disabled>
+                            <label for="editFile">Currently uploaded files</label>
+                        </div>
+                        <div class="col form-floating mb-3 d-flex align-items-center">
+                            <input class="form-control form-control-lg" id="editFormFileLg" type="file" name="postimage">
+                            <label for="editFormFileLg" class="form-label">New File</label>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-success form-btn mt-0" id="editSubmitOffCanvas"
+                            onclick="updatePostContent()">
+                        Post
+                    </button>
+                    <button type="reset" class="btn btn-secondary form-btn mt-0" id="editResetOffCanvas"
+                            onclick="location.reload()">
+                        Cancel
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <p id="searchResult" class="fw-bold"></p>
     </div>
     <div class="p-2 bd-highlight flex-fill bg-danger" id="rightContent">
