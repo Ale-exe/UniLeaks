@@ -10,7 +10,9 @@ const storage = multer.diskStorage({
       cb(null, 'public/images/');
     },
     filename: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.originalname);
+      // Replace the entire filename so that the user cannot do file traversal attacks
+      // Data.now() is used to make the filename unique
+      cb(null, ""+Date.now());
     }
   });
   
