@@ -156,7 +156,7 @@ async function createPost(){
             console.log(response);
             if (response.status === 201){
                 // If successful, reload to show new post
-                // window.location.reload();
+                window.location.reload();
 
             }  else{
                 // TODO: Create error message
