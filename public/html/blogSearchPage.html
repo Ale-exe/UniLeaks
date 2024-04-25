@@ -19,13 +19,13 @@
 </head>
 <!-- when page loads, check if user is logged in and fetch posts-->
 <body onload="loadSession(); loadSearchedPosts()">
-<div class="d-flex p-2 bd-highlight bg-primary" id="topBanner">
+<div class="d-flex p-2 bd-highlight bg-dark" id="topBanner">
     <a href="/" class="d-flex flex-fill">
-        <img src="/images/unileaks.png">
+        <img src="/images/unileaks_white.png">
     </a>
 </div>
 <div class="d-flex bd-highlight" style="height: 100%">
-    <div class="p-2 bd-highlight flex-fill" id="leftContent">Left content</div>
+    <div class="p-2 bd-highlight flex-fill" style="background-color: #DDDDDD" id="leftContent"></div>
     <div class="p-4 bd-highlight bg-light min-vh-100" id="mainContent">
 
 
@@ -123,7 +123,7 @@
 
         <p id="searchResult" class="fw-bold"></p>
     </div>
-    <div class="p-2 bd-highlight flex-fill bg-danger" id="rightContent">
+    <div class="p-2 bd-highlight flex-fill" style="background-color: #DDDDDD" id="rightContent">
 
     </div>
 </div>

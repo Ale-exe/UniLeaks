@@ -33,6 +33,13 @@ async function loadSearchedPosts(){
                         postCardImage.setAttribute('class', 'card-img-top');
                         postCardImage.setAttribute('src', src='images/'+postArray[i][1].filepath);
                     }
+                    postCardImage.style.justifySelf = 'center';
+                    postCardImage.style.height = '40%';
+                    postCardImage.style.width = '40%';
+                    postCardImage.style.display = 'block';
+                    postCardImage.style.marginLeft = 'auto';
+                    postCardImage.style.marginRight = 'auto';
+
                     const postCardBody = document.createElement('div');
                     postCardBody.setAttribute('class','card-body');
                     const postCardTitle = document.createElement('h4');

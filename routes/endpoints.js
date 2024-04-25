@@ -18,6 +18,17 @@ const storage = multer.diskStorage({
       cb(null, ""+Date.now());
     }
 });
+
+function randomKey(length){
+    let series = '';
+    const letterArr = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    for (let i = 0; i < length; i++){
+        series += letterArr[Math.floor(Math.random() * (letterArr.length))];
+    }
+    return series;
+}
+
 const fileUpload = multer({ storage: storage });
 
 const {csrfSync} = require('csrf-sync');
@@ -52,7 +63,7 @@ endpoint_router.post('/posts/updatepost', fileUpload.single('postimage'), querie
 });
 
 endpoint_router.get("/generate-captcha", (req, res) => {
-       const key = helper.randomKey(6);
+       const key = randomKey(6);
 
             const captcha = textToImage.generate(key, {
 

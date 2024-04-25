@@ -19,13 +19,14 @@
 </head>
 <!-- when page loads, check if user is logged in and fetch posts-->
 <body onload="loadSession(); loadPosts()">
-    <div class="d-flex p-2 bd-highlight bg-primary" id="topBanner">
+    <div class="d-flex p-2 bd-highlight bg-dark" id="topBanner">
         <a href="/" class="d-flex flex-fill">
-            <img src="/images/unileaks.png">
+            <img src="/images/unileaks_white.png">
         </a>
     </div>
     <div class="d-flex bd-highlight" style="height: 100%">
-        <div class="p-2 bd-highlight flex-fill" id="leftContent">Left content</div>
+        <div class="p-2 bd-highlight flex-fill" id="leftContent" style="background-color: #DDDDDD"></div>
+
         <div class="p-4 bd-highlight bg-light min-vh-100" id="mainContent">
 
 
@@ -102,7 +103,7 @@
                         <label for="uploadFile">Update File (leave choose file blank if no change desired)</label>
                         <div class="row g-2 d-flex" id="uploadFile">
                             <div class="col form-floating mb-3 col-sm-5">
-                                <input type="text" class="form-control" id="editFile" name="productfile" placeholder="e.g. 'sleeping bag.jpg'" disabled>
+                                <input type="text" class="form-control" id="editFile" name="productfile" disabled>
                                 <label for="editFile">Currently uploaded files</label>
                             </div>
                             <div class="col form-floating mb-3 d-flex align-items-center">
@@ -126,7 +127,7 @@
 
 
         </div>
-        <div class="p-2 bd-highlight flex-fill bg-danger" id="rightContent">
+        <div class="p-2 bd-highlight flex-fill" style="background-color: #DDDDDD" id="rightContent">
 
         </div>
     </div>

@@ -39,6 +39,7 @@ async function loadPosts(){
                 postCardImage.style.display = 'block';
                 postCardImage.style.marginLeft = 'auto';
                 postCardImage.style.marginRight = 'auto';
+
                 const postCardBody = document.createElement('div');
                 postCardBody.setAttribute('class','card-body');
                 const postCardTitle = document.createElement('h4');
