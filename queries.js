@@ -207,8 +207,7 @@ const searchPosts = (req, res) => {
     let searchTerm = req.body.searchterm;
 
     // select all post titles and bodies that include the searchterm
-    pool.query("SELECT * FROM dss.blogposts WHERE (LOWER(title) LIKE LOWER($1)) OR LOWER(body) LIKE LOWER($1)", [searchTerm], (err, result) => {
-        console.log(err);
+    pool.query("SELECT * FROM dss.blogposts WHERE (LOWER(title) LIKE LOWER(CONCAT('%',$1::text,'%'))) OR LOWER(body) LIKE LOWER(CONCAT('%',$1::text,'%'))", [searchTerm], (err, result) => {
         if (result) {    
             console.log(result.rows);
             res.status(201).json(result.rows);
