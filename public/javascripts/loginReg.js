@@ -9,12 +9,73 @@ async function generateCaptcha(){
         csrfToken = data.token;
     })
 
+
+
     await fetch('/generate-captcha').then(res => res.json()).then(captcha => {
         const img = document.getElementById('captchaImg');
-        img.setAttribute('src', captcha.uri)
+        img.setAttribute('src', captcha.uri);
+        var rotate = Math.random() * 20 - 10;
+        var scaleX = Math.random() * 0.01 + 1.2;
+        var scaleY = Math.random() * 0.01 + 1.2;
+
+        img.style.transform = `rotate(${rotate}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
+ 
+        var canvas = document.getElementById('captchaCanvas');
+        var context = canvas.getContext('2d');
         
+        context.font = 'italic 40pt Calibri';
+        context.fillStyle="white";
+        context.fillRect(0,0,500,200)
+        context.fillStyle = "black";
+        context.fontStyle = "bold";
+       
+        //console.log(Math.Random())
+        let chars = ['h','e', 'l', 'l', 'o']
+        for(let i=0; i < chars.length; i++){
+            const x_offset = Math.random() * 10 - 5;
+            const y_offset = Math.random() * 10 - 5;
+            const angle = Math.random() * 0.2 - 0.1;
+
+            context.rotate(angle);
+             context.translate(10 + x_offset + 20, y_offset);
+            context.fillText(chars[i], 0, 100);
+
+      
+        }
     });
 
+}
+
+async function sendVerificationEmail(){
+    const inputUsername = document.getElementById('inputUsername').value;
+    const inputPassword  = document.getElementById('inputPassword').value;
+
+     let csrfToken = '';
+    
+    await fetch('/csrf-token').then(res => res.json()).then(data => {
+        csrfToken = data.token;
+    })    
+
+    console.log("Verifying...");
+
+    await fetch('/users/checkaccountexists', {
+        method: 'POST',
+        body: JSON.stringify({"username": inputUsername, "password": inputPassword}),
+        headers:{
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken,
+        }
+    }).then(res => res.json())
+    .then((json) => {
+        if(json.status !== 201){
+            const errorAlert = document.getElementById('loginAlert');
+            errorAlert.style.visibility = 'visible';
+            errorAlert.textContent = encodeOutput(json.message);
+        }
+        else{
+            onCredentialsCorrect();
+        }
+    })
 }
 
 async function login(){
@@ -22,15 +83,23 @@ async function login(){
     const form = document.getElementById('loginForm');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+
+    const code = document.getElementById('verificationCodeInput').value;
+
+    const appendedData = Object.assign({},data,{
+        verificationCode: code
+    })
+
     let csrfToken = '';
+
+    console.log(data);
     
     await fetch('/csrf-token').then(res => res.json()).then(data => {
         csrfToken = data.token;
-    })
-    
+    })    
     await fetch('/users/checkcredentials', {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(appendedData),
         headers: {
             'Content-Type': 'application/json',
             'x-csrf-token': csrfToken
@@ -44,7 +113,8 @@ async function login(){
                 window.location.href = '/'
             }  else{
                 // If unsuccessful show error message
-                const errorAlert = document.getElementById('loginAlert');
+                const errorAlert = document.getElementById('verificationError');
+                console.log(errorAlert);
                 errorAlert.style.visibility = 'visible';
                 errorAlert.textContent = encodeOutput(response.message);
 
@@ -97,6 +167,7 @@ async function register(){
         csrfToken = data.token;
     })
 
+   
     await fetch('/users/createaccount', {
         method: 'POST',
         body: JSON.stringify(data),

@@ -71,6 +71,16 @@ function encodeOutput(text){
     });
 }
 
+function decodeOutput(text){
+    const specialChars = {'&amp': '&', '&lt': '<', '&gt': '>', '&quot': '"', '&#x27': "'"};
+
+        console.log(text);
+    return text.replace(/[&<>"']/g, function(char){
+        let encodedChar = specialChars[char] || char;
+        return encodedChar;
+    });
+}
+
 // gets the username of the user logged in
 async function getSession() {
     let csrfToken = '';
@@ -85,4 +95,16 @@ async function getSession() {
     if (json.status === 201) {
         return json.result.bloggerusername;
     }
+}
+
+function onCredentialsCorrect(){
+    let canvas = document.getElementById('offcanvasAuth');
+    let initCanvas = new bootstrap.Offcanvas(canvas);
+    initCanvas.show(initCanvas);
+}
+
+function onPopupClose(){
+    let errorMsg = document.getElementById('verificationError');
+    errorMsg.style.visibility = "hidden";
+    
 }
