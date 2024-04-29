@@ -11,11 +11,6 @@ async function loadPosts(){
     await fetch('/posts/getallposts', {
          'x-csrf-token': csrfToken
     })
-
-
-
-
-
         .then(response => response.json())
         .then(data => {
             const postArray = Object.entries(data);

@@ -1,3 +1,14 @@
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport({
+    service: 'hotmail',
+    auth:{
+        user: process.env.USER,
+        pass: process.env.PASS
+
+    }
+})
+
 const {hash, verify} = require('./hashing');
 
 const pool = require('./databaseConnection');
@@ -26,11 +37,59 @@ const getPostById = (req, res) => {
     });
 }
 
+const checkAccountExists = (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    console.log(username);
+    console.log(password);
+
+
+    pool.query("select bloggerpassword, bloggeremail from dss.bloguser WHERE bloggerusername = $1", [username], (err, result) => {
+        if(result.rows.length > 0){
+            try {
+                verify(result.rows[0].bloggerpassword, password).then(data => {
+                    if(data){
+                         const generateDigits = (numDigits) => {
+                            const dict = "0123456789";
+                            var digits = "";
+                            for(var i = 0; i < numDigits; i++){
+                                digits += dict[Math.floor(Math.random() * (dict.length))];
+                            }
+                            return digits;
+              
+                        }
+                        const code = generateDigits(4);
+                        req.session.code = code;
+
+                        // send mail with defined transport object
+                        const info = transporter.sendMail({
+                            from: 'UniLeaks <unileaks@hotmail.com>',
+                            to: result.rows[0].bloggeremail,
+                            subject: "UniLeaks 2-Factor-Authentication (2FA) on Login",
+                            html: `<p>Hi ${username}, <br> <br> This is your 4 digit code: ${code}.<br><br>Please enter this 2FA code back on the register page.</p>`,
+                        }).then((info) => {console.log("Message sent: %s", info); res.status(201).send({status:201, message:"2FA code has been sent"})});
+
+                    }
+                    else{
+                        res.status(200).send({status:200, message:"Invalid username or password!"});
+                    }
+                })
+            } catch(err){
+                res.status(200).send({status:200, message:err})
+            }
+        }
+    })
+
+}
+
 // Checks if username/ password match those stored in the user table
 const checkUserCredentials = (req, res) => {
 
     const username = req.body.username;
     const password = req.body.password;
+    const verificationCode = req.body.verificationCode;
+
 
     // If the username exists in the database - compare user entered password with the hash in the DB using verify function
     pool.query("select bloggerpassword from dss.bloguser WHERE bloggerusername = $1", [username], (err, result) => {
@@ -40,7 +99,8 @@ const checkUserCredentials = (req, res) => {
                 verify(result.rows[0].bloggerpassword, password).then(data => {
                     if(data){
                         // authenticate session
-                        req.session.authenticated = true;
+                        if(verificationCode === req.session.code){
+                            req.session.authenticated = true;
 
                         // Delete any previous sessions from the session database
                         pool.query("DELETE FROM dss.session", (error, result) => {
@@ -63,8 +123,12 @@ const checkUserCredentials = (req, res) => {
                             res.status(200).send({status:200 , message: "Could not hash session ID"});
                         }
                     } else{
-                        res.status(200).send({status:200, message:"Incorrect username or password"});
+                        res.status(200).send({status:200, message:"Verification code you entered is incorrect!"});
                     }
+                    }  else{
+                        res.status(200).send({status:200, message:"Incorrect username or password"});
+                   
+                } 
                 })
             } catch(err){
                 res.status(200).send({status:200, message: "Server error, please try again later"});
@@ -299,5 +363,6 @@ module.exports = {
     searchPosts,
     getSession,
     deleteSession,
+    checkAccountExists,
     updatePost
 }

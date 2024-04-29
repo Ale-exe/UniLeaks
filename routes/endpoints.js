@@ -7,7 +7,7 @@ let endpoint_router = express.Router();
 const session = require('express-session');
 const multer = require('multer');
 const textToImage = require('text-to-image');
-
+const verification = require('../public/javascripts/mailing');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/images/');
@@ -66,7 +66,7 @@ endpoint_router.get("/generate-captcha", (req, res) => {
        const key = randomKey(6);
 
             const captcha = textToImage.generate(key, {
-
+                bgColor:'rgba(235,235,235,255)'
             }).then(function(dataUri){
                 req.session.captchaKey = key;
                 res.json({uri: dataUri})
@@ -78,8 +78,12 @@ endpoint_router.get("/generate-captcha", (req, res) => {
     
 );
 
+endpoint_router.post('/users/checkaccountexists', queries.checkAccountExists);
+
 // user queries
 endpoint_router.post('/users/checkcredentials', queries.checkUserCredentials);
+
+endpoint_router.post('/users/verifyemail', verification.sendVerificationEmail);
 
 endpoint_router.post('/users/createaccount', queries.createAccount);
 

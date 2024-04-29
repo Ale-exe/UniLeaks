@@ -6,3 +6,4 @@ npm install multer
 npm install express-session
 npm install csrf-sync
 npm install text-to-image
+npm install dotenv
