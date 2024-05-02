@@ -43,13 +43,13 @@ async function loadSearchedPosts(){
                     const postCardBody = document.createElement('div');
                     postCardBody.setAttribute('class','card-body');
                     const postCardTitle = document.createElement('h4');
-                    postCardTitle.textContent = encodeOutput(postArray[i][1].title);
+                    postCardTitle.textContent = decodeOutput(postArray[i][1].title);
                     const postCardMainText = document.createElement('p');
-                    postCardMainText.textContent = encodeOutput(postArray[i][1].body);
+                    postCardMainText.textContent = decodeOutput(postArray[i][1].body);
                     const postOptions = document.createElement('div');
                     postOptions.setAttribute('class','d-flex');
                     const author = document.createElement('p');
-                    author.textContent = encodeOutput(`Author: ${postArray[i][1].blogusername}`);
+                    author.textContent = `Author: ${postArray[i][1].blogusername}`;
 
 
                     // Append main card to mainContent div, then each element of the card to postcard

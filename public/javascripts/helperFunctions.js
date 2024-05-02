@@ -28,6 +28,13 @@ function postErrorMessage(text){
     setTimeout(() => {err.style.visibility = 'hidden'},2500);
 }
 
+function postEditErrorMessage(text){
+    const err = document.getElementById('editFormErr');
+    err.style.visibility = 'visible';
+    err.textContent = text;
+    setTimeout(() => {err.style.visibility = 'hidden'},2500);
+}
+
 // Generates a random key using random characters from array
 
 async function retrieveKey(type){
@@ -72,13 +79,11 @@ function encodeOutput(text){
 }
 
 function decodeOutput(text){
-    const specialChars = {'&amp': '&', '&lt': '<', '&gt': '>', '&quot': '"', '&#x27': "'"};
-
-        console.log(text);
-    return text.replace(/[&<>"']/g, function(char){
-        let encodedChar = specialChars[char] || char;
-        return encodedChar;
-    });
+    return text.replaceAll('&amp','&')
+        .replaceAll('&lt','<')
+        .replaceAll('&gt','>')
+        .replaceAll('&quot','"')
+        .replaceAll('&#x27',"'");
 }
 
 // gets the username of the user logged in

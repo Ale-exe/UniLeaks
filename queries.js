@@ -291,7 +291,6 @@ const updatePost = (req, res) => {
     const body = req.body.blogbody;
     const file = req.body.file;
 
-    console.log(req);
     console.log("post id: "+ id);
     console.log("File: " + file);
 

@@ -38,13 +38,13 @@ async function loadPosts(){
                 const postCardBody = document.createElement('div');
                 postCardBody.setAttribute('class','card-body');
                 const postCardTitle = document.createElement('h4');
-                postCardTitle.textContent = encodeOutput(postArray[i][1].title);
+                postCardTitle.textContent = decodeOutput(postArray[i][1].title);
                 const postCardMainText = document.createElement('p');
-                postCardMainText.textContent = encodeOutput(postArray[i][1].body);
+                postCardMainText.textContent = decodeOutput(postArray[i][1].body);
                 const postOptions = document.createElement('div');
                 postOptions.setAttribute('class','d-flex');
                 const author = document.createElement('p');
-                author.textContent = encodeOutput(`Author: ${postArray[i][1].blogusername}`);
+                author.textContent = `Author: ${postArray[i][1].blogusername}`;
 
 
                 // Append main card to mainContent div, then each element of the card to postcard
@@ -106,7 +106,6 @@ async function createPost(){
 
     const encodedDataTitle = encodeOutput(data.blogtitle);
     const encodeDataBody = encodeOutput(data.blogbody);
-
 
     // VALIDATION
     // If post fails the character count check then return failure
@@ -227,8 +226,9 @@ async function editPostContent(id){
         .then(data => {
             const updateForm = document.getElementById('editPostForm');
             updateForm.postId.value = data.result[0].postid;
-            updateForm.blogtitle.value = data.result[0].title;
-            updateForm.blogbody.value = data.result[0].body;
+            // Decodes, returning symbols back to normal
+            updateForm.blogtitle.value = decodeOutput(data.result[0].title);
+            updateForm.blogbody.value = decodeOutput(data.result[0].body);
             updateForm.productfile.value = data.result[0].filepath;
         })
 }
@@ -242,17 +242,58 @@ async function updatePostContent(){
     const form = document.getElementById('editPostForm');
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
+
+
+    // Validate if post meets character constraint and that files are only jpg or png
+    if (!validateWordcount(data.blogtitle, data.blogbody)){
+        return postEditErrorMessage("Please ensure posts meet character count constraints");
+    }
+    if (data.postimage.name !== "" && !data.postimage.name.match(".\(jpg|png|gif)$")) {
+        return postEditErrorMessage("Only the following file formats are permitted: jpg, png and gif");
+    }
+
     formData.append('file', data.postimage.name);
 
+    // replaces post title and body with encoded version
+    formData.set('blogtitle',encodeOutput(data.blogtitle));
+    formData.set('blogbody',encodeOutput(data.blogbody));
 
+    let newFileName = '';
+
+    // Upload file
+    if (data.postimage.name !== "") {
+        await fetch('/posts/updatepic', {
+            method: 'POST',
+            body: formData,
+            headers: {'x-csrf-token': csrfToken},
+
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Data path")
+                console.log(data.path)
+                newFileName = data.path;
+            })
+    }
+
+    // Append edited filename
+    const appendedData = Object.assign({},data,{
+        file: newFileName
+    })
+
+    // Update post data in database
     await fetch('/posts/updatepost', {
         method: 'POST',
-        body: formData,
-        headers:{'x-csrf-token': csrfToken},
+        body: JSON.stringify(appendedData),
+        headers:{
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrfToken
+        }
 
     })
         .then(res => res.json())
         .then(data => {
             window.location.reload();
         })
+
 }

@@ -58,9 +58,12 @@ endpoint_router.post('/posts/postcontent', queries.postContent);
 
 endpoint_router.post('/posts/deletepost', queries.deletePost);
 
-endpoint_router.post('/posts/updatepost', fileUpload.single('postimage'), queries.updatePost, (req,res) =>{
-    res.json({ message: 'File uploaded successfully!', path : req.file});
+endpoint_router.post('/posts/updatepic', fileUpload.single('postimage'), (req,res) =>{
+    res.json({ message: 'File uploaded successfully!', path : req.file.filename});
 });
+
+endpoint_router.post('/posts/updatepost', queries.updatePost);
+
 
 endpoint_router.get("/generate-captcha", (req, res) => {
        const key = randomKey(6);
