@@ -58,7 +58,7 @@ async function loadPosts(){
                 postCardBody.appendChild(postOptions);
                 postOptions.appendChild(author);
 
-                // IF user logged on matches post author then render delete button
+                // IF user logged on matches post author then render delete and edit button
                 if(username !== undefined) {
                     if (username === postArray[i][1].blogusername) {
                         const deletePostButton = document.createElement('p');
@@ -101,6 +101,13 @@ async function createPost(){
     
     const data = Object.fromEntries(formData);
 
+    console.log("data")
+    console.log(data)
+
+    const encodedDataTitle = encodeOutput(data.blogtitle);
+    const encodeDataBody = encodeOutput(data.blogbody);
+
+
     // VALIDATION
     // If post fails the character count check then return failure
     if (!validateWordcount(data.blogtitle, data.blogbody)){
@@ -135,12 +142,15 @@ async function createPost(){
 
     let extraData = {
         // get session from database and filepath to send to
+        bloggerid: data.bloggerid,
         username: await getSession(),
-        path: filepath
+        path: filepath,
+        blogtitle: encodedDataTitle,
+        blogbody: encodeDataBody
     };
 
     // Append the username to the formdata from the post
-    const appendedData = Object.assign(data, extraData);
+    // const appendedData = Object.assign(data, extraData);
 
     await fetch('/csrf-token').then(res => res.json()).then(data => {
         csrfToken = data.token;
@@ -148,7 +158,7 @@ async function createPost(){
 
     await fetch('/posts/postcontent', {
         method: 'POST',
-        body: JSON.stringify(appendedData),
+        body: JSON.stringify(extraData),
         headers: {
             'Content-Type': 'application/json',
             'x-csrf-token': csrfToken
