@@ -46,8 +46,13 @@ const checkAccountExists = (req, res) => {
     console.log("input: " + req.body.captchaInput);
     
 
-    if(req.session.captchaKey != req.body.captchaInput){
+    if(req.session.captchaKey !== req.body.captchaInput){
         res.status(200).send({status:200, message:"Captcha incorrect: Please try again!"});
+        return;
+    }
+
+    if(username.trim().length < 1){
+        res.status(200).send({status:200, message:"Credential boxes must not be empty"});
         return;
     }
 
@@ -82,8 +87,11 @@ const checkAccountExists = (req, res) => {
                     }
                 })
             } catch(err){
+                console.log("in err")
                 res.status(200).send({status:200, message:err})
             }
+        } else {
+            res.status(200).send({status:200, message:"Invalid username or password!"});
         }
     })
 

@@ -91,9 +91,11 @@ async function sendVerificationEmail(){
     }).then(res => res.json())
     .then((json) => {
         if(json.status !== 201){
+            console.log("here")
             const errorAlert = document.getElementById('loginAlert');
             errorAlert.style.visibility = 'visible';
             errorAlert.textContent = encodeOutput(json.message);
+            setTimeout(() => {errorAlert.style.visibility = 'hidden'},2500);
         }
         else{
             onCredentialsCorrect();
