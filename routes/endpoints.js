@@ -68,6 +68,9 @@ endpoint_router.post('/posts/updatepost', queries.updatePost);
 endpoint_router.get("/generate-captcha", (req, res) => {
        const key = randomKey(6);
 
+       req.session.captchaKey = key;
+       res.json({captchaKey: key});
+            /*
             const captcha = textToImage.generate(key, {
                 bgColor:'rgba(235,235,235,255)'
             }).then(function(dataUri){
@@ -75,6 +78,8 @@ endpoint_router.get("/generate-captcha", (req, res) => {
                 res.json({uri: dataUri})
                 console.log(req.session);
             });
+
+            */
         }
     
     

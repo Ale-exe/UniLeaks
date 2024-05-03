@@ -42,7 +42,11 @@ const sendVerificationEmail = (req, res) => {
             subject: "UniLeaks Sign Up Verification",
             html: `<p>Hi ${username}, <br> <br> This is your 4 digit code: ${code}.<br><br>Please enter this verification code back on the register page.</p>`,
         })
+
+
+
         console.log("Message sent: %s", info);
+
 }
 // return error message to user if no response from email
     send()

@@ -19,6 +19,12 @@ function validatePost(postTitle, postBody){
     return true;
 }
 
+function validateLoginForm(){
+    const username = document.getElementById('inputUsername').value.trim();
+    const password = document.getElementById('inputPassword').value.trim();
+    
+}
+
 //Input validation for the sign up form
 function validateRegisterForm(){
     const username = document.getElementById('inputUsername').value.trim();
@@ -31,6 +37,7 @@ function validateRegisterForm(){
     }    
     if(username.length > 20){
         document.getElementById("usernameMsg").textContent = "Username has to be a maximum of 20 characters";
+        return false;
     }
     if(password.length <= 0) {
         document.getElementById("passwordMsg").textContent = "Please enter a password"

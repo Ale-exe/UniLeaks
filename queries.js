@@ -40,10 +40,16 @@ const getPostById = (req, res) => {
 const checkAccountExists = (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    const captchaInput = req.body.captchaInput;
 
-    console.log(username);
-    console.log(password);
+    console.log("Session: " + req.session.captchaKey);
+    console.log("input: " + req.body.captchaInput);
+    
 
+    if(req.session.captchaKey != req.body.captchaInput){
+        res.status(200).send({status:200, message:"Captcha incorrect: Please try again!"});
+        return;
+    }
 
     pool.query("select bloggerpassword, bloggeremail from dss.bloguser WHERE bloggerusername = $1", [username], (err, result) => {
         if(result.rows.length > 0){
@@ -62,7 +68,7 @@ const checkAccountExists = (req, res) => {
                         const code = generateDigits(4);
                         req.session.code = code;
 
-                        // send mail with defined transport object
+                        // send mail with defined transport object         
                         const info = transporter.sendMail({
                             from: 'UniLeaks <unileaks@hotmail.com>',
                             to: result.rows[0].bloggeremail,

@@ -10,36 +10,58 @@ async function generateCaptcha(){
     })
 
 
+    var canvas = document.getElementById('captchaCanvas');
+    var context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
     await fetch('/generate-captcha').then(res => res.json()).then(captcha => {
-        const img = document.getElementById('captchaImg');
+
+        /*const img = document.getElementById('captchaImg');
         img.setAttribute('src', captcha.uri);
         var rotate = Math.random() * 20 - 10;
         var scaleX = Math.random() * 0.01 + 1.2;
         var scaleY = Math.random() * 0.01 + 1.2;
 
         img.style.transform = `rotate(${rotate}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
- 
-        var canvas = document.getElementById('captchaCanvas');
-        var context = canvas.getContext('2d');
+ */
+
         
         context.font = 'italic 40pt Calibri';
         context.fillStyle="white";
-        context.fillRect(0,0,500,200)
+        context.fillRect(0,0,canvas.width, canvas.height)
         context.fillStyle = "black";
         context.fontStyle = "bold";
        
-        //console.log(Math.Random())
-        let chars = ['h','e', 'l', 'l', 'o']
+        //random lines to distort the captcha
+        for (let i = 0; i < 15; i++) {
+            const x1 = Math.random() * canvas.width;
+            const y1 = Math.random() * canvas.height;
+            const x2 = Math.random() * canvas.width;
+            const y2 = Math.random() * canvas.height;
+
+            context.lineWidth = 2
+            context.beginPath();
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+            context.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+            context.stroke();
+    }
+
+
+        let chars = captcha.captchaKey;
+        console.log(chars);
+
         for(let i=0; i < chars.length; i++){
             const x_offset = Math.random() * 10 - 5;
             const y_offset = Math.random() * 10 - 5;
             const angle = Math.random() * 0.2 - 0.1;
 
+            context.save();
+            context.translate(15 + x_offset + i * 40, 100 + y_offset);
             context.rotate(angle);
-             context.translate(10 + x_offset + 20, y_offset);
-            context.fillText(chars[i], 0, 100);
-
+           // context.translate(15 + x_offset + 20, y_offset);
+            context.fillText(chars[i], 0, 0);
+            context.restore();            
       
         }
     });
@@ -49,6 +71,7 @@ async function generateCaptcha(){
 async function sendVerificationEmail(){
     const inputUsername = document.getElementById('inputUsername').value;
     const inputPassword  = document.getElementById('inputPassword').value;
+    const captchaInput  = document.getElementById('captchaInput').value;
 
      let csrfToken = '';
     
@@ -60,7 +83,7 @@ async function sendVerificationEmail(){
 
     await fetch('/users/checkaccountexists', {
         method: 'POST',
-        body: JSON.stringify({"username": inputUsername, "password": inputPassword}),
+        body: JSON.stringify({"username": inputUsername, "password": inputPassword, "captchaInput": captchaInput}),
         headers:{
             'Content-Type': 'application/json',
             'x-csrf-token': csrfToken,
@@ -87,7 +110,7 @@ async function login(){
     const code = document.getElementById('verificationCodeInput').value;
 
     const appendedData = Object.assign({},data,{
-        verificationCode: code
+        verificationCode: code,
     })
 
     let csrfToken = '';
