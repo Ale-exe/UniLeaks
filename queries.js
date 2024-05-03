@@ -150,7 +150,7 @@ const createAccount = (req, res) => {
     const username = req.body.username
     const password = req.body.password;
     const email = req.body.email;
-    const captchaInput = req.body.captchaInput;
+  /*  const captchaInput = req.body.captchaInput;
 
     console.log(req.session);
 
@@ -159,6 +159,7 @@ const createAccount = (req, res) => {
         return;
 
     }
+*/
     if(username.length <= 0)
     {
         res.status(200).send({status:200, message:"No username provided"});
