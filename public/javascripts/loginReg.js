@@ -96,6 +96,8 @@ async function sendVerificationEmail(){
             errorAlert.style.visibility = 'visible';
             errorAlert.textContent = encodeOutput(json.message);
             setTimeout(() => {errorAlert.style.visibility = 'hidden'},2500);
+            document.getElementById('captchaInput').value = '';
+            generateCaptcha()
         }
         else{
             onCredentialsCorrect();
