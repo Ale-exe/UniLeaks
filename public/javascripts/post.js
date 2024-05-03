@@ -278,8 +278,12 @@ async function updatePostContent(){
 
     // Append edited filename
     const appendedData = Object.assign({},data,{
-        file: newFileName
+        file: newFileName,
+        blogtitle: encodeOutput(data.blogtitle),
+        blogbody: encodeOutput(data.blogbody)
     })
+
+    console.log(appendedData)
 
     // Update post data in database
     await fetch('/posts/updatepost', {
