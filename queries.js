@@ -73,13 +73,18 @@ const checkAccountExists = (req, res) => {
                         const code = generateDigits(4);
                         req.session.code = code;
 
-                        // send mail with defined transport object         
-                        const info = transporter.sendMail({
-                            from: 'UniLeaks <unileaks@hotmail.com>',
-                            to: result.rows[0].bloggeremail,
-                            subject: "UniLeaks 2-Factor-Authentication (2FA) on Login",
-                            html: `<p>Hi ${username}, <br> <br> This is your 4 digit code: ${code}.<br><br>Please enter this 2FA code back on the register page.</p>`,
-                        }).then((info) => {console.log("Message sent: %s", info); res.status(201).send({status:201, message:"2FA code has been sent"})});
+                            // send mail with defined transport object
+                            const info = transporter.sendMail({
+                                from: 'UniLeaks <unileaks@hotmail.com>',
+                                to: result.rows[0].bloggeremail,
+                                subject: "UniLeaks 2-Factor-Authentication (2FA) on Login",
+                                html: `<p>Hi ${username}, <br> <br> This is your 4 digit code: ${code}.<br><br>Please enter this 2FA code back on the register page.</p>`,
+                            }).then((info) => {
+                                console.log("Message sent: %s", info);
+                                res.status(201).send({status:201, message:"2FA code has been sent"})
+                            })
+                                .catch(err => {res.status(200).send({status:200, message:"email address not valid"})})
+
 
                     }
                     else{
