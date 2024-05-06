@@ -3,7 +3,6 @@
 //  can test to see if an email address exists in the registration form
 
 async function generateCaptcha(){
-    console.log("generate captcha onload")
     let csrfToken = '';
     await fetch('/csrf-token').then(res => res.json()).then(data => {
         csrfToken = data.token;
@@ -49,7 +48,6 @@ async function generateCaptcha(){
 
 
         let chars = captcha.captchaKey;
-        console.log(chars);
 
         for(let i=0; i < chars.length; i++){
             const x_offset = Math.random() * 10 - 5;
@@ -118,10 +116,7 @@ async function login(){
     })
 
     let csrfToken = '';
-
-    console.log(data);
-    
-    await fetch('/csrf-token').then(res => res.json()).then(data => {
+     await fetch('/csrf-token').then(res => res.json()).then(data => {
         csrfToken = data.token;
     })    
     await fetch('/users/checkcredentials', {
@@ -213,10 +208,10 @@ async function register(){
                 const errorAlert = document.getElementById('regAlert');
                 errorAlert.style.visibility = 'visible';
                 errorAlert.textContent = encodeOutput(response.message);
-
+/*
                 document.getElementById('captchaInput').value = '';
                 generateCaptcha();
-
+*/
             }
         })
         

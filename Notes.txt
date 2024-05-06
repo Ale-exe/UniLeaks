@@ -7,3 +7,4 @@ npm install express-session
 npm install csrf-sync
 npm install text-to-image
 npm install dotenv
+npm install nodemailer
