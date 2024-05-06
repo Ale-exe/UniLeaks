@@ -31,40 +31,69 @@ function validateRegisterForm(){
     const password = document.getElementById('inputPassword').value.trim();
     const email = document.getElementById('inputEmail').value.trim();
 
+    const usernameError = document.getElementById('usernameMsg');
+    const passwordError = document.getElementById('passwordMsg');
+    const emailError = document.getElementById('emailMsg');
+
     if(username.length <= 0){
-        document.getElementById("usernameMsg").textContent = "Please enter a username";
+        usernameError.style.visibility = 'visible';
+        usernameError.textContent = "Please enter a username";
+        setTimeout(() => {usernameError.style.visibility = 'hidden'},2500);
         return false;
     }    
     if(username.length > 20){
-        document.getElementById("usernameMsg").textContent = "Username has to be a maximum of 20 characters";
+        usernameError.style.visibility = 'visible';
+        usernameError.textContent = "Username can be a maximum of 20 characters";
+        setTimeout(() => {usernameError.style.visibility = 'hidden'},2500);
+        return false;
+    }
+    if(username.includes('<') || username.includes('>') || username.includes('&') ||
+        username.includes('"') || username.includes("'")){
+        usernameError.style.visibility = 'visible';
+        usernameError.textContent = "Please use only alphanumeric characters in username";
+        setTimeout(() => {usernameError.style.visibility = 'hidden'},2500);
         return false;
     }
     if(password.length <= 0) {
-        document.getElementById("passwordMsg").textContent = "Please enter a password"
+        passwordError.style.visibility = 'visible';
+        passwordError.textContent = "Please enter a password";
+        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
         return false;
     }
     if(password.length < 12) {
-        document.getElementById("passwordMsg").textContent = "Password length must be at least 12 characters long";
+        passwordError.style.visibility = 'visible';
+        passwordError.textContent = "Password length must be at least 12 characters long";
+        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
         return false; 
     }
     if(!(/[a-z]/.test(password))){
-        document.getElementById("passwordMsg").textContent = "Password must contain a lower case character";
+        passwordError.style.visibility = 'visible';
+        passwordError.textContent = "Password must contain a lower case character";
+        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
         return false;
     }
     if(!(/[A-Z]/.test(password))){
-        document.getElementById("passwordMsg").textContent = "Password must contain an upper case character";
+        passwordError.style.visibility = 'visible';
+        passwordError.textContent = "Password must contain an upper case character";
+        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
         return false;
     }
     if(!(/\d/.test(password))){
-        document.getElementById("passwordMsg").textContent = "Password must contain a number";
+        passwordError.style.visibility = 'visible';
+        passwordError.textContent = "Password must contain a number";
+        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
         return false;
     }
     if(!(/[#.?!@$%^&*-]/.test(password))){
-        document.getElementById("passwordMsg").textContent = "Password must contain a special character: #.?!@$%^&*-";
+        passwordError.style.visibility = 'visible';
+        passwordError.textContent = "Password must contain a special character: #.?!@$%^&*-";
+        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
         return false;
     }  
     if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
-        document.getElementById("emailMsg").textContent = "Please enter a valid email address";
+        emailError.style.visibility = 'visible';
+        emailError.textContent = "Please enter a valid email address";
+        setTimeout(() => {emailError.style.visibility = 'hidden'},2500);
         return false;
     }
     return true;
