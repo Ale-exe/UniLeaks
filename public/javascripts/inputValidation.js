@@ -50,7 +50,7 @@ function validateRegisterForm(){
     if(username.includes('<') || username.includes('>') || username.includes('&') ||
         username.includes('"') || username.includes("'")){
         usernameError.style.visibility = 'visible';
-        usernameError.textContent = "Please use only alphanumeric characters in username";
+        usernameError.textContent = "This username contains invalid characters. Please try another one";
         setTimeout(() => {usernameError.style.visibility = 'hidden'},2500);
         return false;
     }

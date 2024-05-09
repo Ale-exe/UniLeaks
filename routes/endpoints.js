@@ -44,7 +44,13 @@ const {
 } = csrfSync();
 
 // blogger session setup - session stays active for an hour
-endpoint_router.use(session({secret: 'sessionsecret', cookie: {maxAge: 3600000}, saveUninitialized: false, resave: true}));
+endpoint_router.use(session(
+    {secret: 'sessionsecret',
+            cookie: {maxAge: 3600000},
+            saveUninitialized: false,
+            resave: true}
+        )
+);
 
 endpoint_router.get("/csrf-token", (req, res) => res.json({token:generateToken(req)}));
 endpoint_router.use(csrfSynchronisedProtection);
