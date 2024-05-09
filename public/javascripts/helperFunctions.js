@@ -111,5 +111,4 @@ function onCredentialsCorrect(){
 function onPopupClose(){
     let errorMsg = document.getElementById('verificationError');
     errorMsg.style.visibility = "hidden";
-    
 }

@@ -83,7 +83,9 @@ const checkAccountExists = (req, res) => {
                                 console.log("Message sent: %s", info);
                                 res.status(201).send({status:201, message:"2FA code has been sent"})
                             })
-                                .catch(err => {res.status(200).send({status:200, message:"email address not valid"})})
+                                .catch(err => {
+                                    console.log(err);
+                                    res.status(200).send({status:200, message:"email address not valid"})})
 
 
                     }
