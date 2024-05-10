@@ -104,6 +104,18 @@ const getPostById = (postid) => {
     }
 }
 
+function editValidateWordcount(postTitle, postBody){
+    if (postTitle.trim().length < 1 || postBody.trim().length < 1){
+        return false;
+    } else if (postTitle.trim().length > 50){
+        return false;
+    } else if (postBody.trim().length > 500){
+        return false;
+    } else {
+        return true;
+    }
+}
+
 module.exports = {
     generateDigits,
     encodeOutput,
@@ -113,4 +125,5 @@ module.exports = {
     validateRegisterForm,
     checkFile,
     getPostById,
+    editValidateWordcount
 }

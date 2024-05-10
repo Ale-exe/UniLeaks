@@ -89,6 +89,7 @@ async function loadSearchedPosts(){
                             editPostButton.addEventListener('click', () => {
                                 editPostContent(postArray[i][1].postid)
                             })
+
                             postOptions.appendChild(editPostButton);
                             editPostButton.after(deletePostButton);
                         }
