@@ -179,22 +179,6 @@ const createAccount = (req, res) => {
          res.status(200).send({status:200, message:"Password length must be at least 12 characters long"});
          return;
     }
-    if(!(/[a-z]/.test(password))){
-        res.status(200).send({status:200, message:"Password must contain a lower case character"});
-        return;
-    }
-    if(!(/[A-Z]/.test(password))){
-        document.getElementById("passwordMsg").innerHTML = "Password must contain an upper case character";
-        return;
-    }
-    if(!(/\d/.test(password))){
-        res.status(200).send({status:200, message:"Password must contain a number"})
-        return;
-    }
-    if(!(/[#.?!@$%^&*-]/.test(password))){
-        res.status(200).send({status:200, message:"Password must contain a special character: #.?!@$%^&*-"})
-        return;
-    }
     if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
         res.status(200).send({status:200, message:"Email is invalid!"});
         return;

@@ -48,7 +48,7 @@ function validateRegisterForm(){
         return false;
     }
     if(username.includes('<') || username.includes('>') || username.includes('&') ||
-        username.includes('"') || username.includes("'")){
+        username.includes('"') || username.includes("'") || username.includes('=')){
         usernameError.style.visibility = 'visible';
         usernameError.textContent = "This username contains invalid characters. Please try another one";
         setTimeout(() => {usernameError.style.visibility = 'hidden'},2500);
@@ -66,30 +66,7 @@ function validateRegisterForm(){
         setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
         return false; 
     }
-    if(!(/[a-z]/.test(password))){
-        passwordError.style.visibility = 'visible';
-        passwordError.textContent = "Password must contain a lower case character";
-        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
-        return false;
-    }
-    if(!(/[A-Z]/.test(password))){
-        passwordError.style.visibility = 'visible';
-        passwordError.textContent = "Password must contain an upper case character";
-        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
-        return false;
-    }
-    if(!(/\d/.test(password))){
-        passwordError.style.visibility = 'visible';
-        passwordError.textContent = "Password must contain a number";
-        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
-        return false;
-    }
-    if(!(/[#.?!@$%^&*-]/.test(password))){
-        passwordError.style.visibility = 'visible';
-        passwordError.textContent = "Password must contain a special character: #.?!@$%^&*-";
-        setTimeout(() => {passwordError.style.visibility = 'hidden'},2500);
-        return false;
-    }  
+
     if(!(/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/.test(email))){
         emailError.style.visibility = 'visible';
         emailError.textContent = "Please enter a valid email address";

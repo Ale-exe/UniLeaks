@@ -116,8 +116,8 @@ async function createPost(){
         return postErrorMessage("This type of content is not permitted");
     }
     // Check whether image has a supported file extension
-    if (data.file.name !== "" && !data.file.name.match(".\(jpg|png|gif|jfif|webp)$")) {
-        return postErrorMessage("Only the following file formats are permitted: jpg, png, gif, webp and jfif");
+    if (data.file.name !== "" && !data.file.name.match(".\(jpg|png|gif|webp|jpeg|jfif)$")) {
+        return postErrorMessage("Only the following file formats are permitted: jpg, png, gif, jpeg, webp and jfif");
     }
     let csrfToken = '';
     await fetch('/csrf-token').then(res => res.json()).then(data => {
@@ -248,8 +248,8 @@ async function updatePostContent(){
     if (!validateWordcount(data.blogtitle, data.blogbody)){
         return postEditErrorMessage("Please ensure posts meet character count constraints");
     }
-    if (data.postimage.name !== "" && !data.postimage.name.match(".\(jpg|png|gif)$")) {
-        return postEditErrorMessage("Only the following file formats are permitted: jpg, png and gif");
+    if (data.postimage.name !== "" && !data.postimage.name.match(".\(jpg|png|gif|webp|jpeg|jfif)$")) {
+        return postEditErrorMessage("Only the following file formats are permitted: jpg, png, gif, jpeg, webp and jfif");
     }
 
     formData.append('file', data.postimage.name);
