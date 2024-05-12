@@ -116,8 +116,8 @@ async function createPost(){
         return postErrorMessage("This type of content is not permitted");
     }
     // Check whether image has a supported file extension
-    if (data.file.name !== "" && !data.file.name.match(".\(jpg|png|gif)$")) {
-        return postErrorMessage("Only the following file formats are permitted: jpg, png and gif");
+    if (data.file.name !== "" && !data.file.name.match(".\(jpg|png|gif|jfif|webp)$")) {
+        return postErrorMessage("Only the following file formats are permitted: jpg, png, gif, webp and jfif");
     }
     let csrfToken = '';
     await fetch('/csrf-token').then(res => res.json()).then(data => {
