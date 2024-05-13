@@ -64,4 +64,5 @@ ALTER TABLE IF EXISTS dss.session
 
 
 
-3. run npm install 
+3. run npm install
+4. open .env file and populate USER = " " and PASSWORD = " " with the credentials associated with the email account you wish to send 2-FA emails from
